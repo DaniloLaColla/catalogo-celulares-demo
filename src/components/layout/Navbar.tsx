@@ -8,7 +8,8 @@ import {
   Check,
   Copy,
   ExternalLink,
-  ChevronRight
+  ChevronRight,
+  BadgeCheck
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { StoreConfig } from '../../types';
@@ -38,6 +39,13 @@ export const Navbar: React.FC<NavbarProps> = ({
     navigator.clipboard.writeText(loc);
     setCopiedIndex(index);
     setTimeout(() => setCopiedIndex(null), 2000);
+  };
+
+  const handleOpenInstagram = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const rawHandle = config.instagramUser || 'teststore.oficial';
+    const cleanHandle = rawHandle.replace('@', '').trim();
+    window.open(`https://instagram.com/${cleanHandle}`, '_blank', 'noopener,noreferrer');
   };
 
   return (
@@ -70,19 +78,32 @@ export const Navbar: React.FC<NavbarProps> = ({
             )}
 
             <div>
-              <div className="flex items-center gap-1.5">
+              <div className="flex items-center gap-2">
                 <span className="text-lg font-black tracking-tight text-white font-display">
                   {config.storeName}
                 </span>
-                <span className="text-[9px] font-extrabold uppercase px-1.5 py-0.5 rounded bg-white/15 text-slate-200 border border-white/20">
-                  PRO
-                </span>
+
+                {/* Badge Tienda Verificada con Link a Instagram */}
+                <button
+                  type="button"
+                  onClick={handleOpenInstagram}
+                  title={`Tienda Verificada · Clic para ver @${(config.instagramUser || 'teststore.oficial').replace('@', '')} en Instagram`}
+                  className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gradient-to-r from-sky-500/20 to-blue-500/20 hover:from-sky-500/30 hover:to-blue-500/30 border border-sky-400/40 hover:border-sky-400 text-sky-300 hover:text-sky-200 transition-all shadow-[0_0_12px_rgba(56,189,248,0.25)] active:scale-95 group/badge cursor-pointer"
+                >
+                  <BadgeCheck size={13} className="text-sky-400 fill-sky-400/30 group-hover/badge:scale-110 transition-transform shrink-0" />
+                  <span className="text-[10px] font-black tracking-tight">
+                    Verificada
+                  </span>
+                </button>
               </div>
 
               {/* Botón Puntos de Retiro */}
               <button
                 type="button"
-                onClick={() => setShowLocationsModal(true)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowLocationsModal(true);
+                }}
                 className="flex items-center gap-1.5 text-[11px] text-slate-300 hover:text-white transition-all -mt-0.5 group py-0.5"
               >
                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
