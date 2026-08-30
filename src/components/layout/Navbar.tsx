@@ -45,7 +45,11 @@ export const Navbar: React.FC<NavbarProps> = ({
       <header className="sticky top-0 z-40 w-full px-4 sm:px-8 py-3.5 backdrop-blur-2xl bg-[#000000]/80 border-b border-white/10 transition-all">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
           {/* Brand Logo & Info */}
-          <div className="flex items-center gap-3 cursor-pointer">
+          <div 
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            className="flex items-center gap-3 cursor-pointer select-none group"
+            title="Ir al inicio del catálogo"
+          >
             {config.logoUrl ? (
               <div className="relative w-10 h-10 rounded-2xl overflow-hidden bg-white/5 border border-white/15 flex items-center justify-center p-1 shadow-lg shrink-0">
                 <img

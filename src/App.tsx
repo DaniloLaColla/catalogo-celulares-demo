@@ -103,6 +103,14 @@ export function App() {
     setCurrentMobileTab(tab);
     if (tab === 'canje') {
       setIsCanjeOpen(true);
+    } else if (tab === 'catalog') {
+      setIsDetailOpen(false);
+      setIsCanjeOpen(false);
+      setIsAdminOpen(false);
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
     }
   };
 
