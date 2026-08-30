@@ -1,0 +1,159 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: #000000; /* OLED Pure Pitch Black */
+  color: #F8FAFC;
+  overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ─── SISTEMA OBSIDIAN & LIQUID GLASS (Estilo Space Black / Apple Pro) ─── */
+
+/* Cristal Líquido Obsidiana Profundo */
+.liquid-glass {
+  background: radial-gradient(
+    130% 130% at 50% -20%,
+    rgba(255, 255, 255, 0.12) 0%,
+    rgba(255, 255, 255, 0.03) 45%,
+    rgba(10, 10, 12, 0.75) 100%
+  );
+  backdrop-filter: blur(30px) saturate(180%) brightness(110%);
+  -webkit-backdrop-filter: blur(30px) saturate(180%) brightness(110%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 
+    0 25px 50px -12px rgba(0, 0, 0, 0.95),
+    inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.35),
+    inset 0 -1.5px 2px 0 rgba(0, 0, 0, 0.8),
+    0 0 0 1px rgba(255, 255, 255, 0.03);
+}
+
+/* Sheen interactivo que sigue el dedo en Blanco Platino / Titanio */
+.liquid-glass-sheen {
+  position: relative;
+}
+
+.liquid-glass-sheen::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    450px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(255, 255, 255, 0.15),
+    rgba(200, 200, 220, 0.05) 40%,
+    transparent 70%
+  );
+  pointer-events: none;
+  opacity: var(--sheen-opacity, 0.7);
+  transition: opacity 0.3s ease;
+  z-index: 1;
+}
+
+/* Modal y Elementos Elevados */
+.liquid-glass-elevated {
+  background: radial-gradient(
+    140% 140% at 50% -10%,
+    rgba(255, 255, 255, 0.16) 0%,
+    rgba(255, 255, 255, 0.04) 40%,
+    rgba(8, 8, 10, 0.92) 100%
+  );
+  backdrop-filter: blur(40px) saturate(190%) brightness(115%);
+  -webkit-backdrop-filter: blur(40px) saturate(190%) brightness(115%);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 
+    0 35px 80px -15px rgba(0, 0, 0, 0.98),
+    inset 0 2px 2px 0 rgba(255, 255, 255, 0.45),
+    inset 0 -2px 4px 0 rgba(0, 0, 0, 0.8),
+    0 0 40px rgba(255, 255, 255, 0.05);
+}
+
+/* Chips / Pills Negro Titanio */
+.liquid-pill {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.15), 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.liquid-pill-active {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, rgba(180, 180, 190, 0.12) 100%);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 
+    0 0 25px rgba(255, 255, 255, 0.18),
+    inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.6);
+}
+
+/* Tipografía en Gradientes Titanio & Blanco Puro */
+.text-gradient-cyan, .text-gradient-titanium {
+  background: linear-gradient(135deg, #FFFFFF 0%, #E2E8F0 60%, #94A3B8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Botones Líquidos en Blanco Puro / Titanio Brillante */
+.btn-liquid-cyan,  .btn-liquid-cyan {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(220, 220, 225, 0.85) 100%);
+    box-shadow: 0 4px 20px rgba(255, 255, 255, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.8);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .btn-liquid-cyan:hover {
+    background: #FFFFFF;
+    box-shadow: 0 6px 28px rgba(255, 255, 255, 0.45), inset 0 1px 2px rgba(255, 255, 255, 1);
+    transform: translateY(-1px);
+  }
+  .btn-liquid-cyan:active {
+    transform: scale(0.97);
+  }
+
+  /* Botón Oficial de WhatsApp Liquid Glass */
+  .btn-liquid-whatsapp {
+    background: linear-gradient(135deg, #25D366 0%, #1EBE5D 100%);
+    color: #000000;
+    font-weight: 800;
+    box-shadow: 0 4px 20px rgba(37, 211, 102, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.6);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .btn-liquid-whatsapp:hover {
+    background: linear-gradient(135deg, #28e06c 0%, #20ce65 100%);
+    box-shadow: 0 6px 28px rgba(37, 211, 102, 0.55), inset 0 1px 2px rgba(255, 255, 255, 0.8);
+    transform: translateY(-1px);
+  }
+  .btn-liquid-whatsapp:active {
+    transform: scale(0.97);
+  }
+
+.btn-liquid-purple {
+  background: linear-gradient(135deg, #27272A 0%, #18181B 100%);
+  box-shadow: 
+    0 8px 25px -4px rgba(0, 0, 0, 0.6),
+    inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.2),
+    inset 0 -1.5px 2px 0 rgba(0, 0, 0, 0.5);
+  color: #FFFFFF;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  font-weight: 700;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-liquid-purple:hover {
+  background: linear-gradient(135deg, #3F3F46 0%, #27272A 100%);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Scrollbar invisible para mobile */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
