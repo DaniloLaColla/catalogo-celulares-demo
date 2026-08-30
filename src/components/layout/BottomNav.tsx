@@ -16,7 +16,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({
 }) => {
   const openDirectWhatsApp = () => {
     const phone = config.whatsappNumber.replace(/[^0-9]/g, '');
-    const message = encodeURIComponent(`Hola ${config.storeName}! Quería hacer una consulta sobre los productos disponibles.`);
+    const message = encodeURIComponent(`¡Hola ${config.storeName}! Estuve viendo el catálogo online y quería hacerles una consulta sobre los equipos disponibles.`);
     window.open(`https://wa.me/${phone}?text=${message}`, '_blank');
   };
 
