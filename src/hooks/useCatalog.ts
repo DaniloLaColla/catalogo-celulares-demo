@@ -1,11 +1,11 @@
-﻿import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Product, CategoryType, StoreConfig } from '../types';
 import { INITIAL_PRODUCTS } from '../data/initialProducts';
 import { fetchLiveDollarBlue } from '../services/dollarService';
 import { supabase, isSupabaseConfigured } from '../services/supabaseClient';
 
 const DEFAULT_CONFIG: StoreConfig = {
-  storeName: 'NEXUS TECH',
+  storeName: 'TestStore',
   logoUrl: '',
   whatsappNumber: '5492984219804',
   adminPin: '1234',
@@ -16,7 +16,7 @@ const DEFAULT_CONFIG: StoreConfig = {
   canjeMode: 'automatico',
   currencySymbol: '$',
   showArsPrice: true,
-  instagramUser: 'nexustech.oficial',
+  instagramUser: 'teststore.oficial',
   deliveryLocations: [
     'Palermo Soho (Showroom / Punto de Retiro)',
     'Belgrano (Oficina Comercial)',

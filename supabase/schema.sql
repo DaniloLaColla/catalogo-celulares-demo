@@ -1,4 +1,4 @@
-﻿-- ==============================================================================
+-- ==============================================================================
 -- SCHEMA SUPABASE: CATÁLOGO WEB FUTURISTA "LIQUID GLASS" (iOS 26)
 -- Copia y pega este script completo en el SQL Editor de tu proyecto en Supabase
 -- ==============================================================================
@@ -9,7 +9,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 -- 2. Tabla de Configuración de la Tienda
 CREATE TABLE IF NOT EXISTS store_config (
   id TEXT PRIMARY KEY DEFAULT 'default',
-  store_name TEXT NOT NULL DEFAULT 'NEXUS TECH',
+  store_name TEXT NOT NULL DEFAULT 'TestStore',
   whatsapp_number TEXT NOT NULL DEFAULT '5492984219804',
   admin_pin TEXT NOT NULL DEFAULT '1234',
   usd_to_ars_rate NUMERIC NOT NULL DEFAULT 1355,
@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS store_config (
   canje_pricing JSONB,
   currency_symbol TEXT DEFAULT '$',
   show_ars_price BOOLEAN DEFAULT true,
-  instagram_user TEXT DEFAULT 'nexustech.oficial',
+  instagram_user TEXT DEFAULT 'teststore.oficial',
   delivery_locations JSONB DEFAULT '["Palermo Soho (Showroom / Punto de Retiro)", "Belgrano (Oficina Comercial)", "Envíos en el día en moto a CABA y GBA"]'::jsonb,
   shipping_info TEXT DEFAULT 'Envíos a todo el país vía Andreani / Correo Argentino con seguro 100%',
   logo_url TEXT,
