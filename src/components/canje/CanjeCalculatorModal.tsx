@@ -59,6 +59,8 @@ export const CanjeCalculatorModal: React.FC<CanjeCalculatorModalProps> = ({
   );
 
   const [targetTypeFilter, setTargetTypeFilter] = useState<'Todos' | 'Sellado' | 'Usado'>('Todos');
+  const [isCalculating, setIsCalculating] = useState<boolean>(false);
+  const [loadingProgressText, setLoadingProgressText] = useState<string>('Analizando condición del equipo...');
 
   useEffect(() => {
     if (initialTarget) {
@@ -67,7 +69,7 @@ export const CanjeCalculatorModal: React.FC<CanjeCalculatorModalProps> = ({
   }, [initialTarget, setTargetProduct]);
 
   useEffect(() => {
-    if (step === 3 && isOpen) {
+    if (step === 3 && isOpen && !isCalculating) {
       try {
         confetti({
           particleCount: 70,
@@ -79,12 +81,30 @@ export const CanjeCalculatorModal: React.FC<CanjeCalculatorModalProps> = ({
         // Fallback
       }
     }
-  }, [step, isOpen]);
+  }, [step, isOpen, isCalculating]);
 
   if (!isOpen) return null;
 
   const brands = Array.from(new Set(SUPPORTED_TRADE_IN_DEVICES.map((d) => d.brand)));
   const isManualMode = config.canjeMode === 'manual';
+
+  const handleStartCalculation = () => {
+    setIsCalculating(true);
+    setLoadingProgressText('Analizando estado de batería y pantalla...');
+
+    setTimeout(() => {
+      setLoadingProgressText('Cruzando valuación con Dólar Blue Venta...');
+    }, 400);
+
+    setTimeout(() => {
+      setLoadingProgressText('¡Calculando mejor propuesta de toma!');
+    }, 800);
+
+    setTimeout(() => {
+      setIsCalculating(false);
+      setStep(3);
+    }, 1100);
+  };
 
   const handleBatteryInputChange = (val: number) => {
     const clamped = Math.min(100, Math.max(40, val));
@@ -458,18 +478,58 @@ export const CanjeCalculatorModal: React.FC<CanjeCalculatorModalProps> = ({
 
                 <button
                   type="button"
-                  onClick={() => setStep(3)}
+                  onClick={handleStartCalculation}
                   className="btn-liquid-cyan flex items-center gap-1.5 py-2.5 px-5 rounded-2xl text-xs font-bold text-black"
                 >
-                  <span>{isManualMode ? 'Ver Resumen' : 'Ver Cotización'}</span>
+                  <span>{isManualMode ? 'Ver Resumen' : 'Calcular Cotización'}</span>
                   <Sparkles size={15} />
                 </button>
               </div>
             </motion.div>
           )}
 
+          {/* ───────── PANTALLA DE CARGA Y DIAGNÓSTICO EN TIEMPO REAL ───────── */}
+          {isCalculating && (
+            <motion.div
+              key="calculating-state"
+              initial={{ opacity: 0, scale: 0.94 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.94 }}
+              className="py-10 sm:py-14 px-3 flex flex-col items-center justify-center text-center space-y-4 sm:space-y-5"
+            >
+              {/* Radar Scanner Orb */}
+              <div className="relative w-18 h-18 sm:w-22 sm:h-22 flex items-center justify-center">
+                <div className="absolute inset-0 rounded-full bg-cyan-500/20 animate-ping opacity-60 pointer-events-none" />
+                <div className="absolute -inset-2 rounded-full border border-cyan-400/30 animate-spin-slow pointer-events-none" />
+                <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-tr from-cyan-500/30 via-white/10 to-transparent border border-cyan-400/50 backdrop-blur-xl flex items-center justify-center shadow-[0_0_30px_rgba(0,240,255,0.35)]">
+                  <Sparkles size={26} className="text-cyan-300 animate-pulse" />
+                </div>
+              </div>
+
+              {/* Textos de Estado */}
+              <div className="space-y-1 max-w-xs sm:max-w-sm">
+                <h4 className="text-base sm:text-lg font-black text-white tracking-tight">
+                  Cotizando tu Equipo...
+                </h4>
+                <p className="text-xs text-cyan-300 font-semibold min-h-[18px] transition-all">
+                  {loadingProgressText}
+                </p>
+              </div>
+
+              {/* Barra de Progreso Neón */}
+              <div className="w-full max-w-xs h-1.5 bg-white/10 rounded-full overflow-hidden relative">
+                <motion.div
+                  initial={{ x: '-100%' }}
+                  animate={{ x: '100%' }}
+                  transition={{ repeat: Infinity, duration: 0.9, ease: 'easeInOut' }}
+                  className="w-1/2 h-full bg-gradient-to-r from-transparent via-cyan-400 to-transparent rounded-full shadow-[0_0_12px_#22d3ee]"
+                />
+              </div>
+            </motion.div>
+          )}
+
           {/* ───────── PASO 3: RESULTADO ───────── */}
-          {step === 3 && (
+          {!isCalculating && step === 3 && (
             <motion.div
               initial={{ opacity: 0, scale: 0.96 }}
               animate={{ opacity: 1, scale: 1 }}
