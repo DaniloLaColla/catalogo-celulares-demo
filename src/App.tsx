@@ -68,7 +68,7 @@ export function App() {
   const [isCanjeOpen, setIsCanjeOpen] = useState(false);
 
   const [isAdminOpen, setIsAdminOpen] = useState(false);
-  const [currentMobileTab, setCurrentMobileTab] = useState<'catalog' | 'canje' | 'admin'>('catalog');
+  const [currentMobileTab, setCurrentMobileTab] = useState<'catalog' | 'canje'>('catalog');
 
   // Sincronización dinámica de título de pestaña del navegador y favicon según la configuración de la tienda
   useEffect(() => {
@@ -99,12 +99,10 @@ export function App() {
     buyDirectProduct(product);
   };
 
-  const handleSelectMobileTab = (tab: 'catalog' | 'canje' | 'admin') => {
+  const handleSelectMobileTab = (tab: 'catalog' | 'canje') => {
     setCurrentMobileTab(tab);
     if (tab === 'canje') {
       setIsCanjeOpen(true);
-    } else if (tab === 'admin') {
-      setIsAdminOpen(true);
     }
   };
 
