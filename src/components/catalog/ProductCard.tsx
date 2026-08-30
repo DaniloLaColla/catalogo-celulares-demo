@@ -124,9 +124,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           </div>
 
           {config.showArsPrice && (
-            <p className="text-xs font-bold text-emerald-400">
-              ≈ ${Math.round(arsPrice).toLocaleString('es-AR')} ARS
-            </p>
+            <div className="mt-0.5">
+              <p className="text-xs font-bold text-emerald-400">
+                ≈ ${Math.round(arsPrice).toLocaleString('es-AR')} ARS
+              </p>
+              <p className="text-[10px] text-slate-500 font-medium">
+                *Cotización sujeta al Dólar Blue al abonar
+              </p>
+            </div>
           )}
         </div>
 

@@ -303,9 +303,14 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
               </div>
 
               {config.showArsPrice && (
-                <span className="text-xs text-emerald-400 font-bold block">
-                  ≈ ${Math.round(arsPrice).toLocaleString('es-AR')} ARS (Blue Venta)
-                </span>
+                <div className="mt-0.5">
+                  <span className="text-xs text-emerald-400 font-bold block">
+                    ≈ ${Math.round(arsPrice).toLocaleString('es-AR')} ARS (Blue Venta)
+                  </span>
+                  <span className="text-[10px] text-slate-400 block font-normal mt-0.5">
+                    *Importe en pesos sujeto a la cotización del Dólar Blue al momento del pago.
+                  </span>
+                </div>
               )}
             </div>
 

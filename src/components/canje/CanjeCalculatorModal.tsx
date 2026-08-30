@@ -543,8 +543,8 @@ export const CanjeCalculatorModal: React.FC<CanjeCalculatorModalProps> = ({
                             ${currentDiffUSD} USD
                           </span>
                           {config.showArsPrice && (
-                            <span className="text-xs text-slate-400 block -mt-1">
-                              ≈ ${(currentDiffUSD * config.usdToArsRate).toLocaleString('es-AR')} ARS
+                            <span className="text-[11px] text-slate-400 block mt-0.5">
+                              ≈ ${(currentDiffUSD * config.usdToArsRate).toLocaleString('es-AR')} ARS <span className="text-[10px] text-slate-500 font-normal">(*sujeto a cotización del Dólar Blue al abonar)</span>
                             </span>
                           )}
                         </div>

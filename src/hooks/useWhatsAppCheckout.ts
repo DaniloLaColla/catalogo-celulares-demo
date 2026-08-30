@@ -43,7 +43,7 @@ ${batteryText}
 🛡️ *Garantía:* ${product.warranty}
 
 💵 *Precio Final:* $${product.priceUSD} USD${arsTotal}
-
+${config.showArsPrice ? '\nℹ️ _El importe en ARS es estimativo y se calcula al valor del Dólar Blue al momento del pago._\n' : ''}
 📍 *Punto de Retiro / Entrega:*
 ${deliveryOptions}
 
@@ -125,7 +125,7 @@ ${deliveryOptions}
 ───────────────────────────
 ✨ *DIFERENCIA ESTIMADA:* *$${realDifferenceUSD} USD*${arsDiff}
 ───────────────────────────
-
+${config.showArsPrice ? 'ℹ️ _El importe en ARS se ajusta a la cotización del Dólar Blue al concretar la operación._\n' : ''}
 📸 Adjunto fotos de mi equipo para verificar el estado. ¿Cuándo podemos coordinar la revisión y entrega?`;
     }
 
