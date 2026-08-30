@@ -239,22 +239,21 @@ export function useCatalog() {
     try {
       const liveData = await fetchLiveDollarBlue();
       const timeStr = new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
+      const spread = config.dollarSpreadUSD || 0;
+      const finalVenta = liveData.venta + spread;
 
-      setConfig((prev) => {
-        const newVenta = liveData.venta + (prev.dollarSpreadUSD || 0);
-        return {
-          ...prev,
-          usdToArsRate: newVenta,
-          lastDollarFetchTime: timeStr
-        };
-      });
+      setConfig((prev) => ({
+        ...prev,
+        usdToArsRate: finalVenta,
+        lastDollarFetchTime: timeStr
+      }));
 
       if (isSupabaseConfigured) {
         // Actualizar SOLO las columnas de cotización del dólar en Supabase sin tocar store_name ni otros datos
         await supabase
           .from('store_config')
           .update({
-            usd_to_ars_rate: liveData.venta + (config.dollarSpreadUSD || 0),
+            usd_to_ars_rate: finalVenta,
             last_dollar_fetch_time: timeStr,
             updated_at: new Date().toISOString()
           })
