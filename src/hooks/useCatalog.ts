@@ -238,18 +238,27 @@ export function useCatalog() {
     setDollarFetchError(null);
     try {
       const liveData = await fetchLiveDollarBlue();
-      const newVenta = liveData.venta + (config.dollarSpreadUSD || 0);
+      const timeStr = new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
 
-      const updatedConfig: StoreConfig = {
-        ...config,
-        usdToArsRate: newVenta,
-        lastDollarFetchTime: new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })
-      };
-
-      setConfig(updatedConfig);
+      setConfig((prev) => {
+        const newVenta = liveData.venta + (prev.dollarSpreadUSD || 0);
+        return {
+          ...prev,
+          usdToArsRate: newVenta,
+          lastDollarFetchTime: timeStr
+        };
+      });
 
       if (isSupabaseConfigured) {
-        await supabase.from('store_config').upsert(mapConfigToDb(updatedConfig));
+        // Actualizar SOLO las columnas de cotización del dólar en Supabase sin tocar store_name ni otros datos
+        await supabase
+          .from('store_config')
+          .update({
+            usd_to_ars_rate: liveData.venta + (config.dollarSpreadUSD || 0),
+            last_dollar_fetch_time: timeStr,
+            updated_at: new Date().toISOString()
+          })
+          .eq('id', 'default');
       }
     } catch (err) {
       console.warn('Error al actualizar dólar automático:', err);
@@ -257,7 +266,7 @@ export function useCatalog() {
     } finally {
       setIsUpdatingDollar(false);
     }
-  }, [config]);
+  }, [config.dollarSpreadUSD]);
 
   useEffect(() => {
     if (config.autoDollarUpdate) {
