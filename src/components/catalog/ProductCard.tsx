@@ -142,14 +142,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             <span>Canjear</span>
           </button>
 
-          {/* Botón WhatsApp Oficial */}
+          {/* Botón WhatsApp Oficial (Consultar) */}
           <button
             type="button"
             onClick={() => onQuickBuy(product)}
             className="btn-liquid-whatsapp flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-2xl text-xs font-extrabold text-black active:scale-95 transition-all shadow-[0_0_15px_rgba(37,211,102,0.3)]"
           >
             <WhatsAppIcon size={15} className="text-black fill-black" />
-            <span>Comprar</span>
+            <span>Consultar</span>
           </button>
         </div>
       </div>

@@ -32,9 +32,9 @@ export function useWhatsAppCheckout(config: StoreConfig) {
       : '   - Retiro en showroom o Envío a domicilio';
 
     const message = 
-`⚡ *NUEVO PEDIDO DIRECTO | ${config.storeName}* ⚡
+`⚡ *CONSULTA DE DISPONIBILIDAD | ${config.storeName}* ⚡
 
-Hola! Quiero coordinar la compra de este equipo:
+Hola! Quería consultar disponibilidad para coordinar este equipo:
 
 📱 *Producto:* ${product.name} (${product.productType.toUpperCase()})
 💾 *Capacidad:* ${storage}

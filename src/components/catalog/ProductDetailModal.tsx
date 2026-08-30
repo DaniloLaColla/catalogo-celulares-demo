@@ -323,14 +323,14 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                 <span>Plan Canje</span>
               </button>
 
-              {/* Botón Comprar por WhatsApp Oficial */}
+              {/* Botón Consultar por WhatsApp Oficial */}
               <button
                 type="button"
                 onClick={() => onBuyWhatsApp(product, selectedStorage, selectedColor)}
                 className="flex-1 sm:flex-none btn-liquid-whatsapp flex items-center justify-center gap-2 py-3.5 px-6 rounded-2xl text-xs font-black text-black active:scale-95 transition-all shadow-[0_0_20px_rgba(37,211,102,0.4)]"
               >
                 <WhatsAppIcon size={18} className="text-black fill-black" />
-                <span>Comprar por WhatsApp</span>
+                <span>Consultar por WhatsApp</span>
               </button>
             </div>
           </div>
