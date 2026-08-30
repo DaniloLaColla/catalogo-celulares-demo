@@ -675,18 +675,20 @@ export const CanjeCalculatorModal: React.FC<CanjeCalculatorModalProps> = ({
               <div className="pt-2 space-y-3">
                 {targetProduct ? (
                   <button
+                    type="button"
                     onClick={() => onCanjeWhatsApp(evaluation, targetProduct, tradeInState)}
-                    className="w-full btn-liquid-whatsapp flex items-center justify-center gap-2.5 py-4 px-6 rounded-2xl text-sm font-black text-black shadow-[0_0_25px_rgba(37,211,102,0.4)] hover:shadow-[0_0_35px_rgba(37,211,102,0.6)] active:scale-95 transition-all"
+                    className="w-full btn-liquid-whatsapp flex items-center justify-center gap-2 py-3.5 sm:py-4 px-4 sm:px-6 rounded-2xl text-xs sm:text-sm font-black text-black shadow-[0_0_25px_rgba(37,211,102,0.4)] hover:shadow-[0_0_35px_rgba(37,211,102,0.6)] active:scale-95 transition-all text-center leading-snug"
                   >
-                    <WhatsAppIcon size={20} className="text-black fill-black shrink-0" />
-                    <span>{isManualMode ? 'Enviar Diagnóstico por WhatsApp para Cotizar' : 'Canjear por WhatsApp con esta Cotización'}</span>
+                    <WhatsAppIcon size={18} className="text-black fill-black shrink-0" />
+                    <span>{isManualMode ? 'Enviar Diagnóstico por WhatsApp' : 'Canjear por WhatsApp con esta Cotización'}</span>
                   </button>
                 ) : (
                   <button
+                    type="button"
                     onClick={() => onConsultGeneralCanje(evaluation, tradeInState)}
-                    className="w-full btn-liquid-whatsapp flex items-center justify-center gap-2.5 py-4 px-6 rounded-2xl text-sm font-black text-black shadow-[0_0_25px_rgba(37,211,102,0.4)] active:scale-95 transition-all"
+                    className="w-full btn-liquid-whatsapp flex items-center justify-center gap-2 py-3.5 sm:py-4 px-4 sm:px-6 rounded-2xl text-xs sm:text-sm font-black text-black shadow-[0_0_25px_rgba(37,211,102,0.4)] active:scale-95 transition-all text-center leading-snug"
                   >
-                    <WhatsAppIcon size={20} className="text-black fill-black shrink-0" />
+                    <WhatsAppIcon size={18} className="text-black fill-black shrink-0" />
                     <span>Cotizar mi Equipo por WhatsApp con un Asesor</span>
                   </button>
                 )}

@@ -50,16 +50,16 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   return (
     <>
-      <header className="sticky top-0 z-40 w-full px-4 sm:px-8 py-3.5 backdrop-blur-2xl bg-[#000000]/80 border-b border-white/10 transition-all">
-        <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
+      <header className="sticky top-0 z-40 w-full px-3 sm:px-8 py-2.5 sm:py-3.5 backdrop-blur-2xl bg-[#000000]/85 border-b border-white/10 transition-all">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-2 sm:gap-3">
           {/* Brand Logo & Info */}
           <div 
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="flex items-center gap-3 cursor-pointer select-none group"
+            className="flex items-center gap-2 sm:gap-3 cursor-pointer select-none group min-w-0 flex-1 sm:flex-initial"
             title="Ir al inicio del catálogo"
           >
             {config.logoUrl ? (
-              <div className="relative w-10 h-10 rounded-2xl overflow-hidden bg-white/5 border border-white/15 flex items-center justify-center p-1 shadow-lg shrink-0">
+              <div className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-2xl overflow-hidden bg-white/5 border border-white/15 flex items-center justify-center p-1 shadow-lg shrink-0">
                 <img
                   src={config.logoUrl}
                   alt={config.storeName}
@@ -70,16 +70,16 @@ export const Navbar: React.FC<NavbarProps> = ({
                 />
               </div>
             ) : (
-              <div className="relative w-10 h-10 rounded-2xl bg-gradient-to-tr from-white/20 via-zinc-400/20 to-transparent p-[1.5px] shadow-[0_0_20px_rgba(255,255,255,0.15)] shrink-0">
+              <div className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-gradient-to-tr from-white/20 via-zinc-400/20 to-transparent p-[1.5px] shadow-[0_0_20px_rgba(255,255,255,0.15)] shrink-0">
                 <div className="w-full h-full rounded-[14px] bg-[#08080A] flex items-center justify-center">
-                  <AppleLogo size={20} className="text-white fill-white" />
+                  <AppleLogo size={18} className="text-white fill-white sm:w-5 sm:h-5" />
                 </div>
               </div>
             )}
 
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="text-lg font-black tracking-tight text-white font-display">
+            <div className="min-w-0">
+              <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+                <span className="text-sm sm:text-lg font-black tracking-tight text-white font-display truncate max-w-[120px] xs:max-w-[160px] sm:max-w-none">
                   {config.storeName}
                 </span>
 
@@ -88,10 +88,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                   type="button"
                   onClick={handleOpenInstagram}
                   title={`Tienda Verificada · Clic para ver @${(config.instagramUser || 'teststore.oficial').replace('@', '')} en Instagram`}
-                  className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gradient-to-r from-sky-500/20 to-blue-500/20 hover:from-sky-500/30 hover:to-blue-500/30 border border-sky-400/40 hover:border-sky-400 text-sky-300 hover:text-sky-200 transition-all shadow-[0_0_12px_rgba(56,189,248,0.25)] active:scale-95 group/badge cursor-pointer"
+                  className="inline-flex items-center gap-1 px-1.5 sm:px-2 py-0.5 rounded-full bg-gradient-to-r from-sky-500/20 to-blue-500/20 hover:from-sky-500/30 hover:to-blue-500/30 border border-sky-400/40 hover:border-sky-400 text-sky-300 hover:text-sky-200 transition-all shadow-[0_0_12px_rgba(56,189,248,0.25)] active:scale-95 group/badge cursor-pointer shrink-0"
                 >
-                  <BadgeCheck size={13} className="text-sky-400 fill-sky-400/30 group-hover/badge:scale-110 transition-transform shrink-0" />
-                  <span className="text-[10px] font-black tracking-tight">
+                  <BadgeCheck size={12} className="text-sky-400 fill-sky-400/30 group-hover/badge:scale-110 transition-transform shrink-0" />
+                  <span className="text-[9px] sm:text-[10px] font-black tracking-tight">
                     Verificada
                   </span>
                 </button>
@@ -104,10 +104,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                   e.stopPropagation();
                   setShowLocationsModal(true);
                 }}
-                className="flex items-center gap-1.5 text-[11px] text-slate-300 hover:text-white transition-all -mt-0.5 group py-0.5"
+                className="flex items-center gap-1 text-[10px] sm:text-[11px] text-slate-300 hover:text-white transition-all -mt-0.5 group py-0.5"
               >
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
-                <span className="font-semibold underline decoration-slate-600 group-hover:decoration-white truncate max-w-[170px] sm:max-w-[280px]">
+                <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
+                <span className="font-semibold underline decoration-slate-600 group-hover:decoration-white truncate max-w-[130px] xs:max-w-[180px] sm:max-w-[280px]">
                   {config.deliveryLocations && config.deliveryLocations.length > 0
                     ? `${config.deliveryLocations.length} Puntos de Retiro & Envíos`
                     : 'Puntos de Entrega'}
@@ -117,34 +117,34 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
 
           {/* Acciones de Cabecera */}
-          <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
             {/* Badge Dólar Blue Venta */}
             {config.showArsPrice && (
               <button
                 type="button"
                 onClick={onRefreshDollar}
                 title={`Dólar Blue Venta en Vivo · Última actualización: ${config.lastDollarFetchTime || 'Reciente'}. Clic para refrescar.`}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-2xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/25 text-xs font-semibold text-slate-200 transition-all cursor-pointer group"
+                className="flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 sm:py-1.5 rounded-xl sm:rounded-2xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/25 text-[11px] sm:text-xs font-semibold text-slate-200 transition-all cursor-pointer group shrink-0"
               >
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                <span className="text-[11px] text-slate-400 hidden md:inline">Blue Venta:</span>
-                <span className="text-emerald-400 font-extrabold text-xs">
+                <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
+                <span className="text-[10px] sm:text-[11px] text-slate-400 hidden md:inline">Blue Venta:</span>
+                <span className="text-emerald-400 font-extrabold text-[11px] sm:text-xs">
                   ${config.usdToArsRate.toLocaleString('es-AR')}
                 </span>
                 <RefreshCw 
-                  size={11} 
-                  className={`text-slate-400 group-hover:text-emerald-300 ${isUpdatingDollar ? 'animate-spin text-emerald-400' : ''}`} 
+                  size={10} 
+                  className={`text-slate-400 group-hover:text-emerald-300 shrink-0 ${isUpdatingDollar ? 'animate-spin text-emerald-400' : ''}`} 
                 />
               </button>
             )}
 
-            {/* Botón Plan Canje */}
+            {/* Botón Plan Canje (Visible en Pantallas Grandes) */}
             <button
               type="button"
               onClick={onOpenCanje}
-              className="flex items-center gap-1.5 py-2 px-3 sm:px-4 rounded-2xl bg-white/10 hover:bg-white/20 text-white border border-white/20 text-xs font-bold shadow-[0_0_15px_rgba(255,255,255,0.1)] active:scale-95 transition-all"
+              className="hidden sm:flex items-center gap-1.5 py-1.5 sm:py-2 px-3 sm:px-4 rounded-xl sm:rounded-2xl bg-white/10 hover:bg-white/20 text-white border border-white/20 text-xs font-bold shadow-[0_0_15px_rgba(255,255,255,0.1)] active:scale-95 transition-all"
             >
-              <RefreshCw size={14} className="animate-spin-slow text-slate-200" />
+              <RefreshCw size={13} className="animate-spin-slow text-slate-200" />
               <span>Plan Canje</span>
             </button>
 
@@ -152,10 +152,10 @@ export const Navbar: React.FC<NavbarProps> = ({
             <button
               type="button"
               onClick={onOpenAdmin}
-              className="p-2.5 rounded-2xl bg-white/5 hover:bg-white/15 text-slate-300 hover:text-white border border-white/10 active:scale-95 transition-all"
+              className="p-2 sm:p-2.5 rounded-xl sm:rounded-2xl bg-white/5 hover:bg-white/15 text-slate-300 hover:text-white border border-white/10 active:scale-95 transition-all shrink-0"
               title="Panel de Administración"
             >
-              <Lock size={16} />
+              <Lock size={15} />
             </button>
           </div>
         </div>
