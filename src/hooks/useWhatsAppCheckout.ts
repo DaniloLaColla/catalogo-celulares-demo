@@ -102,8 +102,9 @@ ${deliveryOptions}
 
 📸 Adjunto fotos de mi equipo para que me pasen la cotización final y la diferencia a abonar. ¿Cómo coordinamos?`;
     } else {
+      const realDifferenceUSD = Math.max(0, targetProduct.priceUSD - evaluation.estimatedValueUSD);
       const arsDiff = config.showArsPrice
-        ? ` (~$${(evaluation.differenceToPayUSD * config.usdToArsRate).toLocaleString('es-AR')} ARS)`
+        ? ` (~$${(realDifferenceUSD * config.usdToArsRate).toLocaleString('es-AR')} ARS)`
         : '';
 
       message = 
@@ -122,7 +123,7 @@ ${deliveryOptions}
 💰 *Toma Estimada:* $${evaluation.estimatedValueUSD} USD
 
 ───────────────────────────
-✨ *DIFERENCIA ESTIMADA:* *$${evaluation.differenceToPayUSD} USD*${arsDiff}
+✨ *DIFERENCIA ESTIMADA:* *$${realDifferenceUSD} USD*${arsDiff}
 ───────────────────────────
 
 📸 Adjunto fotos de mi equipo para verificar el estado. ¿Cuándo podemos coordinar la revisión y entrega?`;

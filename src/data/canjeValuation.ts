@@ -281,7 +281,7 @@ export function calculateTradeInValue(
     } else if (pct >= 80) {
       batteryDeduction = Math.round(baseValue * (penalties.batteryPct80to87 / 100));
     } else {
-      batteryDeduction = Math.round(baseValue * (penalties.batteryPctBelow80 / 100)) + 30; // Menor a 80%
+      batteryDeduction = Math.round(baseValue * (penalties.batteryPctBelow80 / 100)); // Menor a 80%
     }
   } else {
     batteryDeduction = Math.round(baseValue * (penalties.batteryUnknown / 100));
@@ -317,7 +317,11 @@ export function calculateTradeInValue(
     bonusBonus = penalties.boxCableBonusUSD;
   }
 
-  const finalDeductions = batteryDeduction + screenDeduction + bodyDeduction + faceIdDeduction;
+  // Limitar deducción máxima al 80% para garantizar precio de toma justo y transparente
+  const rawDeductions = batteryDeduction + screenDeduction + bodyDeduction + faceIdDeduction;
+  const maxAllowedDeduction = Math.round(baseValue * 0.80);
+  const finalDeductions = Math.min(rawDeductions, maxAllowedDeduction);
+
   const estimatedValueUSD = Math.max(50, Math.round(baseValue - finalDeductions + bonusBonus));
 
   const targetPrice = targetProduct ? targetProduct.priceUSD : 0;

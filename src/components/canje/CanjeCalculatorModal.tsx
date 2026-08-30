@@ -531,28 +531,31 @@ export const CanjeCalculatorModal: React.FC<CanjeCalculatorModalProps> = ({
                     )}
                   </div>
 
-                  {targetProduct && (
-                    <div className="p-4 rounded-2xl bg-gradient-to-r from-emerald-950/30 to-zinc-900 border border-emerald-500/30 flex items-center justify-between">
-                      <div>
-                        <span className="text-[11px] uppercase tracking-wider text-slate-300 font-bold block">
-                          DIFERENCIA A ABONAR:
-                        </span>
-                        <span className="text-2xl sm:text-3xl font-black text-emerald-400">
-                          ${evaluation.differenceToPayUSD} USD
-                        </span>
-                        {config.showArsPrice && (
-                          <span className="text-xs text-slate-400 block -mt-1">
-                            ≈ ${(evaluation.differenceToPayUSD * config.usdToArsRate).toLocaleString('es-AR')} ARS
+                  {targetProduct && (() => {
+                    const currentDiffUSD = Math.max(0, targetProduct.priceUSD - evaluation.estimatedValueUSD);
+                    return (
+                      <div className="p-4 rounded-2xl bg-gradient-to-r from-emerald-950/30 to-zinc-900 border border-emerald-500/30 flex items-center justify-between">
+                        <div>
+                          <span className="text-[11px] uppercase tracking-wider text-slate-300 font-bold block">
+                            DIFERENCIA A ABONAR:
                           </span>
-                        )}
-                      </div>
+                          <span className="text-2xl sm:text-3xl font-black text-emerald-400">
+                            ${currentDiffUSD} USD
+                          </span>
+                          {config.showArsPrice && (
+                            <span className="text-xs text-slate-400 block -mt-1">
+                              ≈ ${(currentDiffUSD * config.usdToArsRate).toLocaleString('es-AR')} ARS
+                            </span>
+                          )}
+                        </div>
 
-                      <div className="text-right">
-                        <span className="text-[10px] text-slate-400 block">Ahorrás entregando tu equipo</span>
-                        <span className="text-xs font-bold text-emerald-300">-${evaluation.estimatedValueUSD} USD</span>
+                        <div className="text-right">
+                          <span className="text-[10px] text-slate-400 block">Ahorrás entregando tu equipo</span>
+                          <span className="text-xs font-bold text-emerald-300">-${evaluation.estimatedValueUSD} USD</span>
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    );
+                  })()}
                 </>
               )}
 
