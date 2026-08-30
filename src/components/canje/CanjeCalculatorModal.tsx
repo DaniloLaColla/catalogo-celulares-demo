@@ -109,7 +109,7 @@ export const CanjeCalculatorModal: React.FC<CanjeCalculatorModalProps> = ({
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-2.5 sm:p-6 overflow-y-auto">
         {/* Backdrop */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -125,57 +125,58 @@ export const CanjeCalculatorModal: React.FC<CanjeCalculatorModalProps> = ({
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.94, y: 20 }}
           transition={{ type: 'spring', stiffness: 300, damping: 26 }}
-          className="relative w-full max-w-2xl max-h-[92vh] overflow-y-auto no-scrollbar rounded-3xl p-5 sm:p-8 bg-[#0A0A0E] border border-white/20 z-10 my-auto text-slate-100 shadow-[0_25px_60px_rgba(0,0,0,0.95)]"
+          className="relative w-full max-w-xl sm:max-w-2xl max-h-[92vh] overflow-y-auto no-scrollbar rounded-2xl sm:rounded-3xl p-4 sm:p-7 bg-[#0A0A0E] border border-white/20 z-10 my-auto text-slate-100 shadow-[0_25px_60px_rgba(0,0,0,0.95)]"
         >
           {/* Header */}
-          <div className="flex items-center justify-between pb-4 border-b border-white/10 mb-6">
-            <div className="flex items-center gap-3">
-              <div className="p-2.5 rounded-2xl bg-white/10 border border-white/20 text-white">
-                <RefreshCw size={22} className="animate-spin-slow" />
+          <div className="flex items-center justify-between pb-3 sm:pb-4 border-b border-white/10 mb-4 sm:mb-6">
+            <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+              <div className="p-2 sm:p-2.5 rounded-xl sm:rounded-2xl bg-white/10 border border-white/20 text-white shrink-0">
+                <RefreshCw size={18} className="animate-spin-slow sm:w-5 sm:h-5" />
               </div>
-              <div>
-                <h3 className="text-xl font-extrabold text-white tracking-tight flex items-center gap-2">
+              <div className="min-w-0">
+                <h3 className="text-base sm:text-xl font-extrabold text-white tracking-tight flex items-center gap-2">
                   Cotizador Plan Canje
-                  <span className="text-[10px] uppercase px-2 py-0.5 rounded-full bg-white/15 text-slate-200 border border-white/20">
-                    {isManualMode ? 'Asesor Oficial' : 'En Vivo'}
+                  <span className="text-[9px] sm:text-[10px] uppercase px-2 py-0.5 rounded-full bg-white/15 text-slate-200 border border-white/20 shrink-0">
+                    {isManualMode ? 'Asesor' : 'En Vivo'}
                   </span>
                 </h3>
-                <p className="text-xs text-slate-400">
+                <p className="text-[11px] sm:text-xs text-slate-400 truncate max-w-[220px] xs:max-w-[340px] sm:max-w-none">
                   {isManualMode 
-                    ? 'Completa el diagnóstico de tu equipo para recibir la cotización máxima por WhatsApp.'
-                    : 'Calculá el valor de toma de tu equipo y la diferencia a abonar en tiempo real.'}
+                    ? 'Diagnóstico rápido para recibir la cotización máxima por WhatsApp.'
+                    : 'Calculá el valor de toma de tu equipo y la diferencia en tiempo real.'}
                 </p>
               </div>
             </div>
 
             <button
+              type="button"
               onClick={onClose}
-              className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white transition-colors"
+              className="p-1.5 sm:p-2 rounded-full bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white transition-colors shrink-0"
             >
-              <X size={20} />
+              <X size={18} />
             </button>
           </div>
 
           {/* Stepper Indicator */}
-          <div className="flex items-center justify-between mb-8 px-2 sm:px-6">
+          <div className="flex items-center justify-between mb-5 sm:mb-7 px-1 sm:px-4">
             {[
               { num: 1, label: 'Dispositivo' },
               { num: 2, label: 'Diagnóstico' },
               { num: 3, label: isManualMode ? 'Resultado' : 'Cotización' }
             ].map((s, idx) => (
               <React.Fragment key={s.num}>
-                <div className="flex flex-col items-center gap-1.5">
+                <div className="flex flex-col items-center gap-1">
                   <div
-                    className={`w-9 h-9 rounded-full flex items-center justify-center font-bold text-xs transition-all ${
+                    className={`w-7 h-7 sm:w-9 sm:h-9 rounded-full flex items-center justify-center font-bold text-[11px] sm:text-xs transition-all ${
                       step >= s.num
                         ? 'bg-white text-black shadow-[0_0_15px_rgba(255,255,255,0.3)]'
                         : 'bg-white/10 text-slate-400 border border-white/10'
                     }`}
                   >
-                    {step > s.num ? <CheckCircle2 size={16} /> : s.num}
+                    {step > s.num ? <CheckCircle2 size={14} className="sm:w-4 sm:h-4" /> : s.num}
                   </div>
                   <span
-                    className={`text-[11px] font-semibold ${
+                    className={`text-[10px] sm:text-[11px] font-semibold ${
                       step >= s.num ? 'text-white' : 'text-slate-500'
                     }`}
                   >
@@ -184,7 +185,7 @@ export const CanjeCalculatorModal: React.FC<CanjeCalculatorModalProps> = ({
                 </div>
                 {idx < 2 && (
                   <div
-                    className={`flex-1 h-[2px] mx-3 transition-colors ${
+                    className={`flex-1 h-[1.5px] mx-1.5 sm:mx-3 transition-colors ${
                       step > idx + 1 ? 'bg-white/60 shadow-[0_0_8px_rgba(255,255,255,0.4)]' : 'bg-white/10'
                     }`}
                   />
@@ -196,27 +197,28 @@ export const CanjeCalculatorModal: React.FC<CanjeCalculatorModalProps> = ({
           {/* ───────── PASO 1: SELECCION DE DISPOSITIVO ───────── */}
           {step === 1 && (
             <motion.div
-              initial={{ opacity: 0, x: 20 }}
+              initial={{ opacity: 0, x: 15 }}
               animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              className="space-y-6"
+              exit={{ opacity: 0, x: -15 }}
+              className="space-y-4 sm:space-y-5"
             >
               <div>
-                <label className="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-2">
+                <label className="text-[11px] sm:text-xs font-bold text-slate-300 uppercase tracking-wider block mb-1.5">
                   1. Marca de tu equipo actual
                 </label>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-2 gap-2 sm:gap-3">
                   {brands.map((b) => (
                     <button
                       key={b}
+                      type="button"
                       onClick={() => setBrand(b)}
-                      className={`p-3.5 rounded-2xl text-sm font-bold border transition-all flex items-center justify-center gap-2 ${
+                      className={`p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl text-xs sm:text-sm font-bold border transition-all flex items-center justify-center gap-2 ${
                         tradeInState.brand === b
                           ? 'bg-white/20 border-white text-white shadow-sm'
                           : 'bg-white/5 border-white/10 text-slate-300 hover:border-white/20'
                       }`}
                     >
-                      <Smartphone size={16} />
+                      <Smartphone size={15} />
                       <span>{b}</span>
                     </button>
                   ))}
@@ -224,15 +226,16 @@ export const CanjeCalculatorModal: React.FC<CanjeCalculatorModalProps> = ({
               </div>
 
               <div>
-                <label className="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-2">
+                <label className="text-[11px] sm:text-xs font-bold text-slate-300 uppercase tracking-wider block mb-1.5">
                   2. Modelo exacto
                 </label>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 max-h-52 overflow-y-auto no-scrollbar p-1">
+                <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 gap-2 max-h-48 overflow-y-auto no-scrollbar p-0.5">
                   {availableModels.map((m) => (
                     <button
                       key={m.model}
+                      type="button"
                       onClick={() => setModel(m.model)}
-                      className={`p-3 rounded-xl text-xs font-bold border text-left transition-all ${
+                      className={`p-2.5 sm:p-3 rounded-xl text-xs font-bold border text-left transition-all truncate ${
                         tradeInState.model === m.model
                           ? 'bg-white text-black border-white shadow-md'
                           : 'bg-white/5 border-white/10 text-slate-200 hover:bg-white/10'
@@ -245,15 +248,16 @@ export const CanjeCalculatorModal: React.FC<CanjeCalculatorModalProps> = ({
               </div>
 
               <div>
-                <label className="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-2">
-                  3. Almacenamiento
+                <label className="text-[11px] sm:text-xs font-bold text-slate-300 uppercase tracking-wider block mb-1.5">
+                  3. Capacidad de almacenamiento
                 </label>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-1.5 sm:gap-2">
                   {availableCapacities.map((cap) => (
                     <button
                       key={cap}
+                      type="button"
                       onClick={() => updateState('storage', cap)}
-                      className={`px-5 py-2.5 rounded-xl text-xs font-bold border transition-all ${
+                      className={`px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-xl text-xs font-bold border transition-all ${
                         tradeInState.storage === cap
                           ? 'bg-white text-black border-white shadow-sm'
                           : 'bg-white/5 border-white/10 text-slate-300 hover:border-white/20'
@@ -265,13 +269,14 @@ export const CanjeCalculatorModal: React.FC<CanjeCalculatorModalProps> = ({
                 </div>
               </div>
 
-              <div className="pt-4 flex justify-end">
+              <div className="pt-2 sm:pt-3 flex justify-end">
                 <button
+                  type="button"
                   onClick={() => setStep(2)}
-                  className="btn-liquid-cyan flex items-center gap-2 py-3 px-6 rounded-2xl text-xs font-bold text-black"
+                  className="w-full sm:w-auto btn-liquid-cyan flex items-center justify-center gap-2 py-3 px-6 rounded-2xl text-xs font-bold text-black"
                 >
                   <span>Continuar al Diagnóstico</span>
-                  <ArrowRight size={16} />
+                  <ArrowRight size={15} />
                 </button>
               </div>
             </motion.div>
@@ -280,21 +285,21 @@ export const CanjeCalculatorModal: React.FC<CanjeCalculatorModalProps> = ({
           {/* ───────── PASO 2: DIAGNÓSTICO DEL ESTADO ───────── */}
           {step === 2 && (
             <motion.div
-              initial={{ opacity: 0, x: 20 }}
+              initial={{ opacity: 0, x: 15 }}
               animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              className="space-y-6"
+              exit={{ opacity: 0, x: -15 }}
+              className="space-y-4 sm:space-y-5"
             >
               {/* Condición de Batería */}
-              <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/10 space-y-3">
+              <div className="p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-white/[0.03] border border-white/10 space-y-2.5">
                 <div className="flex items-center justify-between">
-                  <label className="text-xs font-bold text-slate-200 uppercase tracking-wider flex items-center gap-1.5">
-                    <BatteryCharging size={16} className="text-emerald-400" />
-                    <span>Salud de Batería de tu Equipo</span>
+                  <label className="text-[11px] sm:text-xs font-bold text-slate-200 uppercase tracking-wider flex items-center gap-1.5">
+                    <BatteryCharging size={15} className="text-emerald-400" />
+                    <span>Salud de Batería</span>
                   </label>
                   
                   {!tradeInState.batteryUnknown && tradeInState.batteryPercentage && (
-                    <span className={`text-xs font-black px-2.5 py-0.5 rounded-full border ${
+                    <span className={`text-[11px] sm:text-xs font-black px-2 py-0.5 rounded-full border ${
                       tradeInState.batteryPercentage >= 90
                         ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30'
                         : tradeInState.batteryPercentage >= 80
@@ -307,8 +312,8 @@ export const CanjeCalculatorModal: React.FC<CanjeCalculatorModalProps> = ({
                 </div>
 
                 {!tradeInState.batteryUnknown ? (
-                  <div className="space-y-2.5">
-                    <div className="flex items-center gap-3">
+                  <div className="space-y-2">
+                    <div className="flex flex-col xs:flex-row items-stretch xs:items-center gap-2">
                       <div className="relative flex-1">
                         <input
                           type="number"
@@ -317,18 +322,18 @@ export const CanjeCalculatorModal: React.FC<CanjeCalculatorModalProps> = ({
                           value={tradeInState.batteryPercentage || 88}
                           onChange={(e) => handleBatteryInputChange(Number(e.target.value))}
                           placeholder="88"
-                          className="w-full pl-4 pr-10 py-2.5 rounded-xl bg-dark-900 border border-white/15 text-sm font-bold text-white focus:outline-none focus:border-white"
+                          className="w-full pl-3.5 pr-8 py-2 rounded-xl bg-dark-900 border border-white/15 text-xs sm:text-sm font-bold text-white focus:outline-none focus:border-white"
                         />
-                        <span className="absolute right-3.5 top-2.5 text-xs font-bold text-slate-400">%</span>
+                        <span className="absolute right-3 top-2 text-xs font-bold text-slate-400">%</span>
                       </div>
 
-                      <div className="flex gap-1.5">
+                      <div className="flex gap-1 overflow-x-auto no-scrollbar">
                         {[100, 95, 90, 85, 80].map((val) => (
                           <button
                             key={val}
                             type="button"
                             onClick={() => handleBatteryInputChange(val)}
-                            className={`px-2.5 py-2 rounded-xl text-xs font-bold border transition-all ${
+                            className={`flex-1 xs:flex-initial px-2 sm:px-2.5 py-1.5 sm:py-2 rounded-xl text-[11px] sm:text-xs font-bold border transition-all ${
                               tradeInState.batteryPercentage === val
                                 ? 'bg-white text-black border-white'
                                 : 'bg-white/5 border-white/10 text-slate-400 hover:text-white'
@@ -341,48 +346,49 @@ export const CanjeCalculatorModal: React.FC<CanjeCalculatorModalProps> = ({
                     </div>
 
                     <p className="text-[10px] text-slate-400">
-                      En iPhone puedes verlo en: <span className="text-slate-200 font-semibold">Ajustes &gt; Batería &gt; Condición de Batería</span>.
+                      En iPhone: <span className="text-slate-200 font-semibold">Ajustes &gt; Batería &gt; Condición de Batería</span>.
                     </p>
                   </div>
                 ) : (
-                  <div className="p-3 rounded-xl bg-blue-500/10 border border-blue-500/25 flex items-center gap-2.5 text-blue-200 text-xs">
-                    <HelpCircle size={16} className="shrink-0 text-blue-400" />
-                    <span>Se evaluará y confirmará la condición de batería durante el peritaje técnico de la tienda.</span>
+                  <div className="p-2.5 rounded-xl bg-blue-500/10 border border-blue-500/25 flex items-center gap-2 text-blue-200 text-xs">
+                    <HelpCircle size={15} className="shrink-0 text-blue-400" />
+                    <span>Se verificará la batería durante el peritaje técnico.</span>
                   </div>
                 )}
 
                 <button
                   type="button"
                   onClick={handleToggleUnknownBattery}
-                  className={`w-full py-2.5 px-3 rounded-xl text-xs font-semibold border transition-all flex items-center justify-center gap-2 ${
+                  className={`w-full py-2 px-3 rounded-xl text-[11px] sm:text-xs font-semibold border transition-all flex items-center justify-center gap-1.5 ${
                     tradeInState.batteryUnknown
                       ? 'bg-blue-500/20 text-blue-300 border-blue-400/40 shadow-sm'
                       : 'bg-white/5 text-slate-400 border-white/10 hover:text-white'
                   }`}
                 >
-                  <HelpCircle size={14} />
+                  <HelpCircle size={13} />
                   <span>
-                    {tradeInState.batteryUnknown ? '✓ Seleccionado: No tengo esa información' : '❓ No sé / No tengo esa información'}
+                    {tradeInState.batteryUnknown ? '✓ Seleccionado: No tengo esa información' : '❓ No sé la condición de batería'}
                   </span>
                 </button>
               </div>
 
               {/* Estado de Pantalla */}
               <div>
-                <label className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5 mb-2">
-                  <ShieldAlert size={15} className="text-purple-400" />
+                <label className="text-[11px] sm:text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5 mb-1.5">
+                  <ShieldAlert size={14} className="text-purple-400" />
                   Estado de Pantalla / Vidrio
                 </label>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                <div className="grid grid-cols-1 xs:grid-cols-3 gap-2">
                   {[
-                    { id: 'intacta', label: '✨ Impecable / Sin rayas' },
-                    { id: 'microrayones', label: '🔍 Microrayones de uso' },
-                    { id: 'rajada', label: '⚠️ Rajada o Rota' }
+                    { id: 'intacta', label: '✨ Impecable' },
+                    { id: 'microrayones', label: '🔍 Microrayones' },
+                    { id: 'rajada', label: '⚠️ Rajada / Rota' }
                   ].map((s) => (
                     <button
                       key={s.id}
+                      type="button"
                       onClick={() => updateState('screenStatus', s.id as any)}
-                      className={`p-3 rounded-xl text-xs font-bold border text-left transition-all ${
+                      className={`p-2.5 sm:p-3 rounded-xl text-xs font-bold border text-left transition-all ${
                         tradeInState.screenStatus === s.id
                           ? 'bg-white text-black border-white shadow-sm'
                           : 'bg-white/5 border-white/10 text-slate-300 hover:border-white/20'
@@ -395,10 +401,10 @@ export const CanjeCalculatorModal: React.FC<CanjeCalculatorModalProps> = ({
               </div>
 
               {/* FaceID & Caja/Cable */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 <div
                   onClick={() => updateState('faceIdWorking', !tradeInState.faceIdWorking)}
-                  className={`p-3.5 rounded-2xl border cursor-pointer transition-all flex items-center justify-between ${
+                  className={`p-3 rounded-xl sm:rounded-2xl border cursor-pointer transition-all flex items-center justify-between ${
                     tradeInState.faceIdWorking
                       ? 'bg-emerald-500/15 border-emerald-400/40 text-emerald-300'
                       : 'bg-rose-500/15 border-rose-400/40 text-rose-300'
@@ -410,21 +416,21 @@ export const CanjeCalculatorModal: React.FC<CanjeCalculatorModalProps> = ({
                       {tradeInState.faceIdWorking ? '100% Operativo' : 'No funciona'}
                     </p>
                   </div>
-                  <div className={`w-5 h-5 rounded-full flex items-center justify-center ${tradeInState.faceIdWorking ? 'bg-emerald-400 text-black' : 'bg-rose-400 text-black'}`}>
-                    <CheckCircle2 size={14} />
+                  <div className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 ${tradeInState.faceIdWorking ? 'bg-emerald-400 text-black' : 'bg-rose-400 text-black'}`}>
+                    <CheckCircle2 size={13} />
                   </div>
                 </div>
 
                 <div
                   onClick={() => updateState('hasBoxAndCable', !tradeInState.hasBoxAndCable)}
-                  className={`p-3.5 rounded-2xl border cursor-pointer transition-all flex items-center justify-between ${
+                  className={`p-3 rounded-xl sm:rounded-2xl border cursor-pointer transition-all flex items-center justify-between ${
                     tradeInState.hasBoxAndCable
                       ? 'bg-white/15 border-white/40 text-white'
                       : 'bg-white/5 border-white/10 text-slate-400'
                   }`}
                 >
                   <div className="text-xs font-bold flex items-center gap-2">
-                    <Box size={16} />
+                    <Box size={15} className="shrink-0" />
                     <div>
                       <span>Caja & Cable Original</span>
                       <p className="text-[10px] text-slate-400 font-normal mt-0.5">
@@ -434,27 +440,29 @@ export const CanjeCalculatorModal: React.FC<CanjeCalculatorModalProps> = ({
                       </p>
                     </div>
                   </div>
-                  <div className={`w-5 h-5 rounded-full flex items-center justify-center ${tradeInState.hasBoxAndCable ? 'bg-white text-black' : 'bg-white/10 text-slate-500'}`}>
-                    <CheckCircle2 size={14} />
+                  <div className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 ${tradeInState.hasBoxAndCable ? 'bg-white text-black' : 'bg-white/10 text-slate-500'}`}>
+                    <CheckCircle2 size={13} />
                   </div>
                 </div>
               </div>
 
-              <div className="pt-4 flex items-center justify-between">
+              <div className="pt-2 flex items-center justify-between gap-2">
                 <button
+                  type="button"
                   onClick={() => setStep(1)}
-                  className="flex items-center gap-2 py-2.5 px-4 rounded-xl bg-white/5 hover:bg-white/15 text-xs font-bold text-slate-300"
+                  className="flex items-center gap-1.5 py-2.5 px-3.5 rounded-xl bg-white/5 hover:bg-white/15 text-xs font-bold text-slate-300"
                 >
-                  <ArrowLeft size={16} />
+                  <ArrowLeft size={15} />
                   <span>Atrás</span>
                 </button>
 
                 <button
+                  type="button"
                   onClick={() => setStep(3)}
-                  className="btn-liquid-cyan flex items-center gap-2 py-3 px-6 rounded-2xl text-xs font-bold text-black"
+                  className="btn-liquid-cyan flex items-center gap-1.5 py-2.5 px-5 rounded-2xl text-xs font-bold text-black"
                 >
-                  <span>{isManualMode ? 'Ver Resumen de Diagnóstico' : 'Calcular Cotización'}</span>
-                  <Sparkles size={16} />
+                  <span>{isManualMode ? 'Ver Resumen' : 'Ver Cotización'}</span>
+                  <Sparkles size={15} />
                 </button>
               </div>
             </motion.div>
@@ -463,28 +471,28 @@ export const CanjeCalculatorModal: React.FC<CanjeCalculatorModalProps> = ({
           {/* ───────── PASO 3: RESULTADO ───────── */}
           {step === 3 && (
             <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
+              initial={{ opacity: 0, scale: 0.96 }}
               animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className="space-y-6"
+              exit={{ opacity: 0, scale: 0.96 }}
+              className="space-y-4 sm:space-y-5"
             >
               {isManualMode ? (
                 /* MODALIDAD MANUAL */
-                <div className="p-6 rounded-3xl bg-gradient-to-br from-zinc-900 via-neutral-900 to-zinc-900 border border-white/20 text-center space-y-4 shadow-xl">
-                  <div className="w-12 h-12 rounded-full bg-[#25D366]/20 text-[#25D366] border border-[#25D366]/30 flex items-center justify-center mx-auto">
-                    <WhatsAppIcon size={24} className="text-[#25D366] fill-[#25D366]" />
+                <div className="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-gradient-to-br from-zinc-900 via-neutral-900 to-zinc-900 border border-white/20 text-center space-y-3 shadow-xl">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#25D366]/20 text-[#25D366] border border-[#25D366]/30 flex items-center justify-center mx-auto">
+                    <WhatsAppIcon size={20} className="text-[#25D366] fill-[#25D366]" />
                   </div>
 
                   <div>
-                    <h4 className="text-xl font-extrabold text-white">
+                    <h4 className="text-base sm:text-xl font-extrabold text-white">
                       ¡Diagnóstico Listo para Cotizar!
                     </h4>
-                    <p className="text-xs text-slate-300 mt-1 max-w-md mx-auto">
-                      Tu <strong className="text-white">{tradeInState.model} ({tradeInState.storage})</strong> califica para nuestro Plan Canje. Un asesor comercial te dará la cotización máxima al instante vía WhatsApp.
+                    <p className="text-xs text-slate-300 mt-1 max-w-md mx-auto leading-relaxed">
+                      Tu <strong className="text-white">{tradeInState.model} ({tradeInState.storage})</strong> califica para nuestro Plan Canje. Te pasamos la cotización máxima por WhatsApp.
                     </p>
                   </div>
 
-                  <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 text-left text-xs space-y-1.5 max-w-md mx-auto">
+                  <div className="p-3 rounded-xl bg-white/5 border border-white/10 text-left text-xs space-y-1 max-w-md mx-auto">
                     <div className="flex justify-between text-slate-300">
                       <span>Equipo:</span>
                       <strong className="text-white">{tradeInState.brand} {tradeInState.model} {tradeInState.storage}</strong>
@@ -492,7 +500,7 @@ export const CanjeCalculatorModal: React.FC<CanjeCalculatorModalProps> = ({
                     <div className="flex justify-between text-slate-300">
                       <span>Batería:</span>
                       <strong className="text-emerald-400">
-                        {tradeInState.batteryUnknown ? 'A verificar en peritaje' : `${tradeInState.batteryPercentage}%`}
+                        {tradeInState.batteryUnknown ? 'A peritar' : `${tradeInState.batteryPercentage}%`}
                       </strong>
                     </div>
                     <div className="flex justify-between text-slate-300">
@@ -501,31 +509,31 @@ export const CanjeCalculatorModal: React.FC<CanjeCalculatorModalProps> = ({
                     </div>
                     <div className="flex justify-between text-slate-300">
                       <span>Caja y Accesorios:</span>
-                      <strong className="text-white">{tradeInState.hasBoxAndCable ? 'Sí (Incluye caja y cable)' : 'No'}</strong>
+                      <strong className="text-white">{tradeInState.hasBoxAndCable ? 'Sí (Caja y cable)' : 'No'}</strong>
                     </div>
                   </div>
                 </div>
               ) : (
                 /* MODALIDAD AUTOMÁTICA */
                 <>
-                  <div className="p-5 rounded-3xl bg-white/[0.04] border border-white/20 text-center relative overflow-hidden shadow-xl">
-                    <div className="absolute top-3 right-3 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-white/15 text-slate-200 border border-white/20">
-                      Valuación Estimada
+                  <div className="p-4 sm:p-5 rounded-2xl sm:rounded-3xl bg-white/[0.04] border border-white/20 text-center relative overflow-hidden shadow-xl">
+                    <div className="inline-block text-[9px] sm:text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-white/15 text-slate-200 border border-white/20 mb-1">
+                      Valuación Estimada de tu Usado
                     </div>
 
-                    <p className="text-xs text-slate-400 uppercase tracking-wider font-semibold">
+                    <p className="text-[11px] sm:text-xs text-slate-400 font-semibold truncate">
                       Tomamos tu {evaluation.tradeInModel} ({evaluation.tradeInStorage}) en:
                     </p>
 
-                    <div className="my-2 flex items-baseline justify-center gap-2">
-                      <span className="text-4xl sm:text-5xl font-black text-white">
+                    <div className="my-1 flex items-baseline justify-center gap-1.5">
+                      <span className="text-3xl sm:text-5xl font-black text-white">
                         ${evaluation.estimatedValueUSD}
                       </span>
-                      <span className="text-lg font-bold text-slate-400">USD</span>
+                      <span className="text-base sm:text-lg font-bold text-slate-400">USD</span>
                     </div>
 
                     {config.showArsPrice && (
-                      <p className="text-xs text-emerald-400 font-bold">
+                      <p className="text-[11px] sm:text-xs text-emerald-400 font-bold">
                         ≈ ${(evaluation.estimatedValueUSD * config.usdToArsRate).toLocaleString('es-AR')} ARS
                       </p>
                     )}
@@ -534,23 +542,23 @@ export const CanjeCalculatorModal: React.FC<CanjeCalculatorModalProps> = ({
                   {targetProduct && (() => {
                     const currentDiffUSD = Math.max(0, targetProduct.priceUSD - evaluation.estimatedValueUSD);
                     return (
-                      <div className="p-4 rounded-2xl bg-gradient-to-r from-emerald-950/30 to-zinc-900 border border-emerald-500/30 flex items-center justify-between">
+                      <div className="p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-gradient-to-r from-emerald-950/30 to-zinc-900 border border-emerald-500/30 flex flex-col xs:flex-row items-start xs:items-center justify-between gap-2.5">
                         <div>
-                          <span className="text-[11px] uppercase tracking-wider text-slate-300 font-bold block">
+                          <span className="text-[10px] sm:text-[11px] uppercase tracking-wider text-slate-300 font-bold block">
                             DIFERENCIA A ABONAR:
                           </span>
-                          <span className="text-2xl sm:text-3xl font-black text-emerald-400">
+                          <span className="text-2xl sm:text-3xl font-black text-emerald-400 leading-tight">
                             ${currentDiffUSD} USD
                           </span>
                           {config.showArsPrice && (
                             <span className="text-[11px] text-slate-400 block mt-0.5">
-                              ≈ ${(currentDiffUSD * config.usdToArsRate).toLocaleString('es-AR')} ARS <span className="text-[10px] text-slate-500 font-normal">(*sujeto a cotización del Dólar Blue al abonar)</span>
+                              ≈ ${(currentDiffUSD * config.usdToArsRate).toLocaleString('es-AR')} ARS <span className="text-[9px] text-slate-500 font-normal">(*sujeto al Dólar Blue al abonar)</span>
                             </span>
                           )}
                         </div>
 
-                        <div className="text-right">
-                          <span className="text-[10px] text-slate-400 block">Ahorrás entregando tu equipo</span>
+                        <div className="xs:text-right">
+                          <span className="text-[10px] text-slate-400 block">Ahorrás con tu usado</span>
                           <span className="text-xs font-bold text-emerald-300">-${evaluation.estimatedValueUSD} USD</span>
                         </div>
                       </div>
@@ -560,55 +568,56 @@ export const CanjeCalculatorModal: React.FC<CanjeCalculatorModalProps> = ({
               )}
 
               {/* SECCIÓN: EQUIPO QUE DESEAS LLEVAR */}
-              <div className="space-y-3">
-                <label className="text-xs font-bold text-slate-300 uppercase tracking-wider block">
+              <div className="space-y-2">
+                <label className="text-[11px] sm:text-xs font-bold text-slate-300 uppercase tracking-wider block">
                   Equipo que deseas llevarte:
                 </label>
 
                 {targetProduct ? (
-                  <div className={`p-4 rounded-2xl border flex items-center justify-between gap-4 ${
+                  <div className={`p-3 sm:p-4 rounded-xl sm:rounded-2xl border flex items-center justify-between gap-3 ${
                     targetProduct.productType === 'Usado' 
                       ? 'bg-purple-950/20 border-purple-500/40' 
                       : 'bg-white/[0.04] border-white/20'
                   }`}>
-                    <div className="flex items-center gap-3 min-w-0">
+                    <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
                       <img
                         src={targetProduct.image}
                         alt={targetProduct.name}
-                        className="w-14 h-14 object-contain filter drop-shadow-md shrink-0"
+                        className="w-11 h-11 sm:w-14 sm:h-14 object-contain filter drop-shadow-md shrink-0"
                       />
                       <div className="min-w-0">
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <h4 className="text-sm font-bold text-white truncate">{targetProduct.name}</h4>
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          <h4 className="text-xs sm:text-sm font-bold text-white truncate">{targetProduct.name}</h4>
                           
                           {targetProduct.productType === 'Usado' ? (
-                            <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-purple-500/25 text-purple-300 border border-purple-400/40 shrink-0">
-                              🔄 Usado · 🔋 Batería {targetProduct.batteryPercentage || 90}%
+                            <span className="text-[9px] sm:text-[10px] font-extrabold px-1.5 py-0.5 rounded-full bg-purple-500/25 text-purple-300 border border-purple-400/40 shrink-0">
+                              🔄 Usado · 🔋 {targetProduct.batteryPercentage || 90}%
                             </span>
                           ) : (
-                            <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-white/20 text-slate-100 border border-white/25 shrink-0">
-                              📦 Sellado (Gtía Apple)
+                            <span className="text-[9px] sm:text-[10px] font-extrabold px-1.5 py-0.5 rounded-full bg-white/20 text-slate-100 border border-white/25 shrink-0">
+                              📦 Sellado
                             </span>
                           )}
                         </div>
 
-                        <p className="text-xs text-slate-300 font-semibold mt-0.5">
-                          Valor lista: <strong className="text-white">${targetProduct.priceUSD} USD</strong> · {targetProduct.warranty}
+                        <p className="text-[11px] sm:text-xs text-slate-300 font-semibold mt-0.5">
+                          Lista: <strong className="text-white">${targetProduct.priceUSD} USD</strong> · {targetProduct.warranty}
                         </p>
                       </div>
                     </div>
 
                     <button
+                      type="button"
                       onClick={() => setTargetProduct(null)}
                       className="text-xs text-slate-300 hover:text-white underline font-bold shrink-0"
                     >
-                      Cambiar equipo
+                      Cambiar
                     </button>
                   </div>
                 ) : (
-                  <div className="p-3.5 rounded-2xl bg-white/[0.03] border border-white/10 space-y-2.5">
+                  <div className="p-3 rounded-xl sm:rounded-2xl bg-white/[0.03] border border-white/10 space-y-2">
                     <div className="flex items-center justify-between pb-1">
-                      <span className="text-xs font-semibold text-slate-300">Selecciona un modelo del catálogo:</span>
+                      <span className="text-xs font-semibold text-slate-300">Selecciona del catálogo:</span>
                       
                       <div className="flex gap-1">
                         {(['Todos', 'Sellado', 'Usado'] as const).map((t) => (
@@ -616,7 +625,7 @@ export const CanjeCalculatorModal: React.FC<CanjeCalculatorModalProps> = ({
                             key={t}
                             type="button"
                             onClick={() => setTargetTypeFilter(t)}
-                            className={`px-2 py-1 rounded-lg text-[10px] font-bold border transition-all ${
+                            className={`px-2 py-0.5 rounded-lg text-[10px] font-bold border transition-all ${
                               targetTypeFilter === t
                                 ? 'bg-white text-black border-white'
                                 : 'bg-white/5 text-slate-400 border-white/10 hover:text-white'
@@ -628,7 +637,7 @@ export const CanjeCalculatorModal: React.FC<CanjeCalculatorModalProps> = ({
                       </div>
                     </div>
 
-                    <div className="max-h-52 overflow-y-auto no-scrollbar space-y-2 pr-1">
+                    <div className="max-h-44 overflow-y-auto no-scrollbar space-y-1.5 pr-1">
                       {filteredTargetProducts.map((p) => {
                         const isUsado = p.productType === 'Usado';
                         const batPct = p.batteryPercentage || 90;
@@ -637,29 +646,29 @@ export const CanjeCalculatorModal: React.FC<CanjeCalculatorModalProps> = ({
                           <div
                             key={p.id}
                             onClick={() => setTargetProduct(p)}
-                            className={`p-3 rounded-2xl border flex items-center justify-between cursor-pointer transition-all gap-3 ${
+                            className={`p-2.5 rounded-xl border flex items-center justify-between cursor-pointer transition-all gap-2.5 ${
                               isUsado
                                 ? 'bg-purple-950/15 hover:bg-purple-900/30 border-purple-500/20 hover:border-purple-400/50'
                                 : 'bg-white/5 hover:bg-white/10 border-white/10 hover:border-white/30'
                             }`}
                           >
-                            <div className="flex items-center gap-3 min-w-0">
-                              <img src={p.image} alt={p.name} className="w-10 h-10 object-contain shrink-0" />
+                            <div className="flex items-center gap-2.5 min-w-0">
+                              <img src={p.image} alt={p.name} className="w-9 h-9 object-contain shrink-0" />
                               <div className="min-w-0">
-                                <div className="flex items-center gap-2 flex-wrap">
+                                <div className="flex items-center gap-1.5 flex-wrap">
                                   <h5 className="text-xs font-bold text-white truncate">{p.name}</h5>
                                   
                                   {isUsado ? (
-                                    <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-400/30 shrink-0">
+                                    <span className="text-[9px] font-extrabold px-1.5 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-400/30 shrink-0">
                                       🔄 Usado · 🔋 {batPct}%
                                     </span>
                                   ) : (
-                                    <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-white/15 text-slate-200 border border-white/25 shrink-0">
+                                    <span className="text-[9px] font-extrabold px-1.5 py-0.5 rounded-full bg-white/15 text-slate-200 border border-white/25 shrink-0">
                                       📦 Sellado
                                     </span>
                                   )}
                                 </div>
-                                <p className="text-[11px] text-slate-400 truncate mt-0.5">{p.specs}</p>
+                                <p className="text-[10px] text-slate-400 truncate mt-0.5">{p.specs}</p>
                               </div>
                             </div>
 
@@ -674,31 +683,32 @@ export const CanjeCalculatorModal: React.FC<CanjeCalculatorModalProps> = ({
                 )}
               </div>
 
-              {/* Botones de Acción Oficiales de WhatsApp */}
-              <div className="pt-2 space-y-3">
+              {/* Botones de Acción de WhatsApp */}
+              <div className="pt-2 space-y-2">
                 {targetProduct ? (
                   <button
                     type="button"
                     onClick={() => onCanjeWhatsApp(evaluation, targetProduct, tradeInState)}
-                    className="w-full btn-liquid-whatsapp flex items-center justify-center gap-2 py-3.5 sm:py-4 px-4 sm:px-6 rounded-2xl text-xs sm:text-sm font-black text-black shadow-[0_0_25px_rgba(37,211,102,0.4)] hover:shadow-[0_0_35px_rgba(37,211,102,0.6)] active:scale-95 transition-all text-center leading-snug"
+                    className="w-full btn-liquid-whatsapp flex items-center justify-center gap-2 py-3.5 px-4 rounded-2xl text-xs sm:text-sm font-black text-black shadow-[0_0_20px_rgba(37,211,102,0.4)] hover:shadow-[0_0_30px_rgba(37,211,102,0.6)] active:scale-95 transition-all text-center"
                   >
                     <WhatsAppIcon size={18} className="text-black fill-black shrink-0" />
-                    <span>{isManualMode ? 'Enviar Diagnóstico por WhatsApp' : 'Canjear por WhatsApp con esta Cotización'}</span>
+                    <span>Consultar Canje por WhatsApp</span>
                   </button>
                 ) : (
                   <button
                     type="button"
                     onClick={() => onConsultGeneralCanje(evaluation, tradeInState)}
-                    className="w-full btn-liquid-whatsapp flex items-center justify-center gap-2 py-3.5 sm:py-4 px-4 sm:px-6 rounded-2xl text-xs sm:text-sm font-black text-black shadow-[0_0_25px_rgba(37,211,102,0.4)] active:scale-95 transition-all text-center leading-snug"
+                    className="w-full btn-liquid-whatsapp flex items-center justify-center gap-2 py-3.5 px-4 rounded-2xl text-xs sm:text-sm font-black text-black shadow-[0_0_20px_rgba(37,211,102,0.4)] active:scale-95 transition-all text-center"
                   >
                     <WhatsAppIcon size={18} className="text-black fill-black shrink-0" />
-                    <span>Cotizar mi Equipo por WhatsApp con un Asesor</span>
+                    <span>Consultar Cotización por WhatsApp</span>
                   </button>
                 )}
 
                 <button
+                  type="button"
                   onClick={() => setStep(1)}
-                  className="w-full py-2 text-xs text-slate-400 hover:text-white transition-colors text-center"
+                  className="w-full py-1.5 text-xs text-slate-400 hover:text-white transition-colors text-center"
                 >
                   Recalcular con otro dispositivo
                 </button>
