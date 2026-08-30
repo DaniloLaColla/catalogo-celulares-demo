@@ -348,6 +348,32 @@ export const AdminDrawer: React.FC<AdminDrawerProps> = ({
   const [newTradeInStorage, setNewTradeInStorage] = useState('128GB');
   const [newTradeInPrice, setNewTradeInPrice] = useState(500);
 
+  // Estados de Filtros y Búsqueda en Lista de Productos del Admin
+  const [adminSearchQuery, setAdminSearchQuery] = useState('');
+  const [adminCategoryFilter, setAdminCategoryFilter] = useState<CategoryType | 'Todos'>('Todos');
+  const [adminTypeFilter, setAdminTypeFilter] = useState<'Todos' | 'Sellado' | 'Usado'>('Todos');
+  const [adminStockFilter, setAdminStockFilter] = useState<'Todos' | 'inStock' | 'paused'>('Todos');
+
+  // Lista de Productos Filtrada en Admin
+  const adminFilteredProducts = products.filter((p) => {
+    const matchCategory = adminCategoryFilter === 'Todos' || p.category === adminCategoryFilter;
+    const matchType = adminTypeFilter === 'Todos' || p.productType === adminTypeFilter;
+    const matchStock = 
+      adminStockFilter === 'Todos' ||
+      (adminStockFilter === 'inStock' && p.inStock) ||
+      (adminStockFilter === 'paused' && !p.inStock);
+    const query = adminSearchQuery.trim().toLowerCase();
+    const matchSearch = 
+      !query ||
+      p.name.toLowerCase().includes(query) ||
+      p.specs.toLowerCase().includes(query) ||
+      p.brand.toLowerCase().includes(query) ||
+      p.storageOptions?.some((s) => s.toLowerCase().includes(query)) ||
+      p.colorOptions?.some((c) => c.name.toLowerCase().includes(query));
+
+    return matchCategory && matchType && matchStock && matchSearch;
+  });
+
   // Presets guardados permanentemente por categoría
   const [customPresets, setCustomPresets] = useState<CustomPresetsState>(() => {
     try {
@@ -1715,77 +1741,215 @@ export const AdminDrawer: React.FC<AdminDrawerProps> = ({
                       </form>
                     )}
 
-                    {/* LISTA RÁPIDA DE PRODUCTOS */}
-                    <div className="space-y-2.5 max-h-[50vh] overflow-y-auto no-scrollbar pr-1">
-                      {products.map((p) => (
-                        <div
-                          key={p.id}
-                          className={`p-3 rounded-2xl border flex items-center justify-between gap-3 transition-all ${
-                            editingProductId === p.id 
-                              ? 'bg-amber-500/10 border-amber-400/40 ring-1 ring-amber-400/30'
-                              : 'bg-white/[0.03] border-white/10 hover:border-white/20'
-                          }`}
-                        >
-                          <div className="flex items-center gap-3 min-w-0">
-                            <img
-                              src={p.image}
-                              alt={p.name}
-                              className="w-10 h-10 object-contain filter drop-shadow"
-                            />
-                            <div className="min-w-0">
-                              <div className="flex items-center gap-1.5 flex-wrap">
-                                <h5 className="text-xs font-bold text-white truncate">{p.name}</h5>
-                                <span className={`text-[9px] font-bold px-1.5 py-0.2 rounded ${
-                                  p.productType === 'Usado' ? 'bg-purple-500/20 text-purple-300' : 'bg-white/20 text-slate-200'
-                                }`}>
-                                  {p.productType === 'Usado' ? `🔋${p.batteryPercentage || 90}%` : 'Sellado'}
-                                </span>
-                                <span className="text-[9px] font-semibold px-1 py-0.2 rounded bg-cyan-500/20 text-cyan-300">
-                                  {p.category}
-                                </span>
-                                {p.gallery && p.gallery.length > 1 && (
-                                  <span className="text-[9px] font-semibold px-1 py-0.2 rounded bg-white/10 text-slate-300">
-                                    📸 {p.gallery.length} fotos
-                                  </span>
-                                )}
-                              </div>
-                              <p className="text-[11px] text-slate-300 font-semibold">
-                                ${p.priceUSD} USD · {p.storageOptions?.join(', ')}
-                              </p>
-                            </div>
-                          </div>
+                    {/* BARRA DE BÚSQUEDA Y FILTROS DEL INVENTARIO */}
+                    <div className="space-y-3 pt-2 border-t border-white/10">
+                      <div className="flex items-center justify-between gap-2 flex-wrap">
+                        <div className="flex items-center gap-2">
+                          <Sliders size={14} className="text-cyan-400" />
+                          <span className="text-xs font-bold text-white uppercase tracking-wider">
+                            Inventario de Productos
+                          </span>
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/10 text-slate-300 border border-white/15">
+                            {adminFilteredProducts.length} de {products.length}
+                          </span>
+                        </div>
 
-                          <div className="flex items-center gap-1.5">
-                            <button
-                              onClick={() => handleStartEdit(p)}
-                              className="p-1.5 rounded-lg bg-white/10 hover:bg-amber-400 hover:text-black text-amber-300 border border-amber-400/30 transition-all flex items-center gap-1 text-[10px] font-bold"
-                              title="Editar producto"
-                            >
-                              <Pencil size={12} />
-                              <span className="hidden sm:inline">Editar</span>
-                            </button>
+                        {(adminSearchQuery || adminCategoryFilter !== 'Todos' || adminTypeFilter !== 'Todos' || adminStockFilter !== 'Todos') && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setAdminSearchQuery('');
+                              setAdminCategoryFilter('Todos');
+                              setAdminTypeFilter('Todos');
+                              setAdminStockFilter('Todos');
+                            }}
+                            className="text-[10px] text-rose-400 hover:text-rose-300 font-bold flex items-center gap-1 hover:underline"
+                          >
+                            <RotateCcw size={10} />
+                            <span>Limpiar Filtros</span>
+                          </button>
+                        )}
+                      </div>
 
+                      {/* Buscador por Nombre, Specs o Color */}
+                      <div className="relative">
+                        <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                        <input
+                          type="text"
+                          value={adminSearchQuery}
+                          onChange={(e) => setAdminSearchQuery(e.target.value)}
+                          placeholder="Buscar por modelo, memoria, specs o color (ej. iPhone 17, 256GB, Titanio)..."
+                          className="w-full pl-8 pr-8 py-2 rounded-xl bg-black/40 border border-white/10 text-xs text-white placeholder:text-slate-500 focus:border-cyan-400 focus:outline-none transition-all"
+                        />
+                        {adminSearchQuery && (
+                          <button
+                            type="button"
+                            onClick={() => setAdminSearchQuery('')}
+                            className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white p-0.5"
+                          >
+                            <X size={12} />
+                          </button>
+                        )}
+                      </div>
+
+                      {/* Filtro por Categorías (Pills Horizontales) */}
+                      <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
+                        {(['Todos', ...CATEGORY_ITEMS.map((c) => c.id)] as (CategoryType | 'Todos')[]).map((cat) => {
+                          const isSelected = adminCategoryFilter === cat;
+                          return (
                             <button
-                              onClick={() => onToggleStock(p.id)}
-                              className={`px-2.5 py-1 rounded-xl text-[10px] font-bold border transition-all ${
-                                p.inStock
-                                  ? 'bg-emerald-500/20 text-emerald-300 border-emerald-400/40'
-                                  : 'bg-rose-500/20 text-rose-300 border-rose-400/40'
+                              key={cat}
+                              type="button"
+                              onClick={() => setAdminCategoryFilter(cat)}
+                              className={`px-2.5 py-1 rounded-xl text-[11px] font-bold whitespace-nowrap border transition-all ${
+                                isSelected
+                                  ? 'bg-white text-black border-white shadow-sm'
+                                  : 'bg-white/5 text-slate-400 border-white/10 hover:text-white hover:bg-white/10'
                               }`}
                             >
-                              {p.inStock ? 'Stock' : 'Pausado'}
+                              {cat}
                             </button>
+                          );
+                        })}
+                      </div>
 
+                      {/* Filtros Secundarios: Condición y Stock */}
+                      <div className="grid grid-cols-2 gap-2 pt-1">
+                        {/* Condición */}
+                        <div className="flex items-center gap-1 p-1 rounded-xl bg-black/30 border border-white/5">
+                          {(['Todos', 'Sellado', 'Usado'] as const).map((t) => (
                             <button
-                              onClick={() => onDeleteProduct(p.id)}
-                              className="p-1.5 rounded-lg bg-white/5 hover:bg-rose-500/20 text-slate-400 hover:text-rose-300 transition-colors"
-                              title="Eliminar producto"
+                              key={t}
+                              type="button"
+                              onClick={() => setAdminTypeFilter(t)}
+                              className={`flex-1 py-1 rounded-lg text-[10px] font-bold transition-all ${
+                                adminTypeFilter === t
+                                  ? t === 'Usado'
+                                    ? 'bg-purple-500/20 text-purple-300 border border-purple-400/30'
+                                    : 'bg-white/15 text-white border border-white/20'
+                                  : 'text-slate-400 hover:text-white'
+                              }`}
                             >
-                              <Trash2 size={14} />
+                              {t === 'Todos' ? 'Condición: Todos' : t}
                             </button>
-                          </div>
+                          ))}
                         </div>
-                      ))}
+
+                        {/* Stock */}
+                        <div className="flex items-center gap-1 p-1 rounded-xl bg-black/30 border border-white/5">
+                          {(['Todos', 'inStock', 'paused'] as const).map((s) => (
+                            <button
+                              key={s}
+                              type="button"
+                              onClick={() => setAdminStockFilter(s)}
+                              className={`flex-1 py-1 rounded-lg text-[10px] font-bold transition-all ${
+                                adminStockFilter === s
+                                  ? s === 'inStock'
+                                    ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-400/30'
+                                    : s === 'paused'
+                                    ? 'bg-rose-500/20 text-rose-300 border border-rose-400/30'
+                                    : 'bg-white/15 text-white border border-white/20'
+                                  : 'text-slate-400 hover:text-white'
+                              }`}
+                            >
+                              {s === 'Todos' ? 'Stock: Todos' : s === 'inStock' ? 'Activos' : 'Pausados'}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* LISTA RÁPIDA DE PRODUCTOS FILTRADOS */}
+                    <div className="space-y-2.5 max-h-[50vh] overflow-y-auto no-scrollbar pr-1">
+                      {adminFilteredProducts.length === 0 ? (
+                        <div className="text-center py-8 px-4 rounded-2xl bg-white/[0.02] border border-white/10 space-y-2">
+                          <p className="text-xs text-slate-400">
+                            No se encontraron productos con los filtros actuales.
+                          </p>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setAdminSearchQuery('');
+                              setAdminCategoryFilter('Todos');
+                              setAdminTypeFilter('Todos');
+                              setAdminStockFilter('Todos');
+                            }}
+                            className="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold transition-all"
+                          >
+                            Restablecer Filtros
+                          </button>
+                        </div>
+                      ) : (
+                        adminFilteredProducts.map((p) => (
+                          <div
+                            key={p.id}
+                            className={`p-3 rounded-2xl border flex items-center justify-between gap-3 transition-all ${
+                              editingProductId === p.id 
+                                ? 'bg-amber-500/10 border-amber-400/40 ring-1 ring-amber-400/30'
+                                : 'bg-white/[0.03] border-white/10 hover:border-white/20'
+                            }`}
+                          >
+                            <div className="flex items-center gap-3 min-w-0">
+                              <img
+                                src={p.image}
+                                alt={p.name}
+                                className="w-10 h-10 object-contain filter drop-shadow"
+                              />
+                              <div className="min-w-0">
+                                <div className="flex items-center gap-1.5 flex-wrap">
+                                  <h5 className="text-xs font-bold text-white truncate">{p.name}</h5>
+                                  <span className={`text-[9px] font-bold px-1.5 py-0.2 rounded ${
+                                    p.productType === 'Usado' ? 'bg-purple-500/20 text-purple-300' : 'bg-white/20 text-slate-200'
+                                  }`}>
+                                    {p.productType === 'Usado' ? `🔋${p.batteryPercentage || 90}%` : 'Sellado'}
+                                  </span>
+                                  <span className="text-[9px] font-semibold px-1 py-0.2 rounded bg-cyan-500/20 text-cyan-300">
+                                    {p.category}
+                                  </span>
+                                  {p.gallery && p.gallery.length > 1 && (
+                                    <span className="text-[9px] font-semibold px-1 py-0.2 rounded bg-white/10 text-slate-300">
+                                     📸 {p.gallery.length} fotos
+                                    </span>
+                                  )}
+                                </div>
+                                <p className="text-[11px] text-slate-300 font-semibold">
+                                  ${p.priceUSD} USD · {p.storageOptions?.join(', ')}
+                                </p>
+                              </div>
+                            </div>
+
+                            <div className="flex items-center gap-1.5">
+                              <button
+                                onClick={() => handleStartEdit(p)}
+                                className="p-1.5 rounded-lg bg-white/10 hover:bg-amber-400 hover:text-black text-amber-300 border border-amber-400/30 transition-all flex items-center gap-1 text-[10px] font-bold"
+                                title="Editar producto"
+                              >
+                                <Pencil size={12} />
+                                <span className="hidden sm:inline">Editar</span>
+                              </button>
+
+                              <button
+                                onClick={() => onToggleStock(p.id)}
+                                className={`px-2.5 py-1 rounded-xl text-[10px] font-bold border transition-all ${
+                                  p.inStock
+                                    ? 'bg-emerald-500/20 text-emerald-300 border-emerald-400/40'
+                                    : 'bg-rose-500/20 text-rose-300 border-rose-400/40'
+                                }`}
+                              >
+                                {p.inStock ? 'Stock' : 'Pausado'}
+                              </button>
+
+                              <button
+                                onClick={() => onDeleteProduct(p.id)}
+                                className="p-1.5 rounded-lg bg-white/5 hover:bg-rose-500/20 text-slate-400 hover:text-rose-300 transition-colors"
+                                title="Eliminar producto"
+                              >
+                                <Trash2 size={14} />
+                              </button>
+                            </div>
+                          </div>
+                        ))
+                      )}
                     </div>
                   </div>
                 )}
