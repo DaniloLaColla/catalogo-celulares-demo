@@ -147,6 +147,49 @@ export const CanjeCalculatorModal: React.FC<CanjeCalculatorModalProps> = ({
           transition={{ type: 'spring', stiffness: 300, damping: 26 }}
           className="relative w-full max-w-xl sm:max-w-2xl max-h-[92vh] overflow-y-auto no-scrollbar rounded-2xl sm:rounded-3xl p-4 sm:p-7 bg-[#0A0A0E] border border-white/20 z-10 my-auto text-slate-100 shadow-[0_25px_60px_rgba(0,0,0,0.95)]"
         >
+          {/* OVERLAY DE CARGA Y DIAGNÓSTICO EN TIEMPO REAL */}
+          <AnimatePresence>
+            {isCalculating && (
+              <motion.div
+                key="calculating-overlay"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="absolute inset-0 z-40 rounded-2xl sm:rounded-3xl bg-[#0A0A0E]/85 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center space-y-4 sm:space-y-5 shadow-2xl"
+              >
+                {/* Radar Scanner Orb */}
+                <div className="relative w-20 h-20 sm:w-24 sm:h-24 flex items-center justify-center">
+                  <div className="absolute inset-0 rounded-full bg-cyan-500/20 animate-ping opacity-60 pointer-events-none" />
+                  <div className="absolute -inset-2 rounded-full border border-cyan-400/30 animate-spin-slow pointer-events-none" />
+                  <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-tr from-cyan-500/30 via-white/10 to-transparent border border-cyan-400/50 backdrop-blur-xl flex items-center justify-center shadow-[0_0_30px_rgba(0,240,255,0.4)]">
+                    <Sparkles size={28} className="text-cyan-300 animate-pulse" />
+                  </div>
+                </div>
+
+                {/* Textos de Estado */}
+                <div className="space-y-1.5 max-w-xs sm:max-w-sm">
+                  <h4 className="text-base sm:text-xl font-black text-white tracking-tight">
+                    Cotizando tu Equipo...
+                  </h4>
+                  <p className="text-xs sm:text-sm text-cyan-300 font-semibold min-h-[20px] transition-all">
+                    {loadingProgressText}
+                  </p>
+                </div>
+
+                {/* Barra de Progreso Neón */}
+                <div className="w-full max-w-xs h-1.5 bg-white/10 rounded-full overflow-hidden relative">
+                  <motion.div
+                    initial={{ x: '-100%' }}
+                    animate={{ x: '100%' }}
+                    transition={{ repeat: Infinity, duration: 0.9, ease: 'easeInOut' }}
+                    className="w-1/2 h-full bg-gradient-to-r from-transparent via-cyan-400 to-transparent rounded-full shadow-[0_0_12px_#22d3ee]"
+                  />
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
           {/* Header */}
           <div className="flex items-center justify-between pb-3 sm:pb-4 border-b border-white/10 mb-4 sm:mb-6">
             <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
@@ -488,48 +531,8 @@ export const CanjeCalculatorModal: React.FC<CanjeCalculatorModalProps> = ({
             </motion.div>
           )}
 
-          {/* ───────── PANTALLA DE CARGA Y DIAGNÓSTICO EN TIEMPO REAL ───────── */}
-          {isCalculating && (
-            <motion.div
-              key="calculating-state"
-              initial={{ opacity: 0, scale: 0.94 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.94 }}
-              className="py-10 sm:py-14 px-3 flex flex-col items-center justify-center text-center space-y-4 sm:space-y-5"
-            >
-              {/* Radar Scanner Orb */}
-              <div className="relative w-18 h-18 sm:w-22 sm:h-22 flex items-center justify-center">
-                <div className="absolute inset-0 rounded-full bg-cyan-500/20 animate-ping opacity-60 pointer-events-none" />
-                <div className="absolute -inset-2 rounded-full border border-cyan-400/30 animate-spin-slow pointer-events-none" />
-                <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-tr from-cyan-500/30 via-white/10 to-transparent border border-cyan-400/50 backdrop-blur-xl flex items-center justify-center shadow-[0_0_30px_rgba(0,240,255,0.35)]">
-                  <Sparkles size={26} className="text-cyan-300 animate-pulse" />
-                </div>
-              </div>
-
-              {/* Textos de Estado */}
-              <div className="space-y-1 max-w-xs sm:max-w-sm">
-                <h4 className="text-base sm:text-lg font-black text-white tracking-tight">
-                  Cotizando tu Equipo...
-                </h4>
-                <p className="text-xs text-cyan-300 font-semibold min-h-[18px] transition-all">
-                  {loadingProgressText}
-                </p>
-              </div>
-
-              {/* Barra de Progreso Neón */}
-              <div className="w-full max-w-xs h-1.5 bg-white/10 rounded-full overflow-hidden relative">
-                <motion.div
-                  initial={{ x: '-100%' }}
-                  animate={{ x: '100%' }}
-                  transition={{ repeat: Infinity, duration: 0.9, ease: 'easeInOut' }}
-                  className="w-1/2 h-full bg-gradient-to-r from-transparent via-cyan-400 to-transparent rounded-full shadow-[0_0_12px_#22d3ee]"
-                />
-              </div>
-            </motion.div>
-          )}
-
           {/* ───────── PASO 3: RESULTADO ───────── */}
-          {!isCalculating && step === 3 && (
+          {step === 3 && (
             <motion.div
               initial={{ opacity: 0, scale: 0.96 }}
               animate={{ opacity: 1, scale: 1 }}
