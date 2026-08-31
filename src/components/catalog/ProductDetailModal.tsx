@@ -8,7 +8,9 @@ import {
   MapPin, 
   ChevronLeft,
   ChevronRight,
-  Camera
+  Camera,
+  Share2,
+  Check
 } from 'lucide-react';
 import { Product, StoreConfig } from '../../types';
 import { WhatsAppIcon } from '../ui/WhatsAppIcon';
@@ -33,6 +35,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
   const [selectedStorage, setSelectedStorage] = useState<string>('');
   const [selectedColor, setSelectedColor] = useState<string>('');
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState<number>(0);
+  const [copied, setCopied] = useState<boolean>(false);
 
   // Armar lista completa de fotos sin duplicados
   const photos = React.useMemo(() => {
@@ -46,6 +49,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
       setSelectedStorage(product.storageOptions[0] || '128GB');
       setSelectedColor(product.colorOptions[0]?.name || 'Titanio Natural');
       setCurrentPhotoIndex(0);
+      setCopied(false);
     }
   }, [product]);
 
@@ -62,6 +66,44 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
   const handlePrevPhoto = () => {
     if (photos.length <= 1) return;
     setCurrentPhotoIndex((prev) => (prev - 1 + photos.length) % photos.length);
+  };
+
+  const handleShare = async () => {
+    if (!product) return;
+
+    const shareUrl = window.location.href;
+    const shareTitle = `${product.name} | ${config.storeName}`;
+    const batteryInfo = isUsado && product.batteryPercentage ? ` · Batería ${product.batteryPercentage}%` : '';
+    const shareText = `📱 ¡Mira este ${product.name} (${product.productType}${batteryInfo}) por $${product.priceUSD} USD en ${config.storeName}!`;
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: shareTitle,
+          text: shareText,
+          url: shareUrl
+        });
+        return;
+      } catch (err) {
+        if ((err as Error).name === 'AbortError') return;
+      }
+    }
+
+    // Fallback: Copiar al portapapeles
+    try {
+      await navigator.clipboard.writeText(`${shareText}\n${shareUrl}`);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
+    } catch (e) {
+      const dummy = document.createElement('input');
+      document.body.appendChild(dummy);
+      dummy.value = `${shareText}\n${shareUrl}`;
+      dummy.select();
+      document.execCommand('copy');
+      document.body.removeChild(dummy);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
+    }
   };
 
   return (
@@ -86,7 +128,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
         >
           {/* Header */}
           <div className="flex items-center justify-between pb-3 border-b border-white/10">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
               <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
                 {product.brand} · {product.category}
               </span>
@@ -99,12 +141,36 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
               </span>
             </div>
 
-            <button
-              onClick={onClose}
-              className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white transition-colors"
-            >
-              <X size={20} />
-            </button>
+            <div className="flex items-center gap-2">
+              {/* Botón Compartir */}
+              <button
+                type="button"
+                onClick={handleShare}
+                className="flex items-center gap-1.5 py-1.5 px-3 rounded-full bg-white/10 hover:bg-white/20 text-slate-200 hover:text-white transition-all text-xs font-bold border border-white/10 active:scale-95"
+                title="Compartir producto"
+              >
+                {copied ? (
+                  <>
+                    <Check size={14} className="text-emerald-400 shrink-0" />
+                    <span className="text-emerald-300">¡Copiado!</span>
+                  </>
+                ) : (
+                  <>
+                    <Share2 size={14} className="shrink-0" />
+                    <span className="hidden xs:inline">Compartir</span>
+                  </>
+                )}
+              </button>
+
+              <button
+                type="button"
+                onClick={onClose}
+                className="p-1.5 sm:p-2 rounded-full bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white transition-colors"
+                title="Cerrar"
+              >
+                <X size={18} />
+              </button>
+            </div>
           </div>
 
           {/* Grid Principal: Galería de Fotos + Info */}
