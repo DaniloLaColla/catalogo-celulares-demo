@@ -71,6 +71,10 @@ ${deliveryOptions}
       ? (targetProduct.colorOptions[0]?.name || 'Color publicado')
       : (selectedColor || targetProduct.colorOptions[0]?.name || 'Estándar');
 
+    const targetBatteryText = isUsado
+      ? `🔋 *Batería del equipo:* ${targetProduct.batteryPercentage || 90}% (Original)`
+      : `📦 *Condición:* Nuevo Sellado (Batería 100% / 0 Ciclos)`;
+
     const isManual = config.canjeMode === 'manual';
 
     let message = '';
@@ -100,12 +104,13 @@ ${deliveryOptions}
 
 🎯 *EQUIPO QUE DESEO LLEVAR:*
 📱 *Modelo:* ${targetProduct.name} (${targetProduct.productType.toUpperCase()} - ${storage} - ${color})
+${targetBatteryText}
 🛡️ *Garantía:* ${targetProduct.warranty}
 💵 *Precio de Lista:* $${targetProduct.priceUSD} USD
 
 📦 *MI EQUIPO ACTUAL (A ENTREGAR):*
 📲 *Modelo:* ${tradeInState.brand} ${tradeInState.model} (${tradeInState.storage})
-🔋 *Batería:* ${batteryStr}
+🔋 *Batería de mi equipo:* ${batteryStr}
 ✨ *Pantalla:* ${screenLabel}
 🛡️ *Biometría (Face ID / Huella):* ${faceIdLabel}
 📦 *Caja y Accesorios:* ${boxStr}
@@ -130,12 +135,13 @@ ${deliveryOptions}
 
 🎯 *EQUIPO QUE DESEO LLEVAR:*
 📱 *Modelo:* ${targetProduct.name} (${targetProduct.productType.toUpperCase()} - ${storage} - ${color})
+${targetBatteryText}
 🛡️ *Garantía:* ${targetProduct.warranty}
 💵 *Valor Lista:* $${targetProduct.priceUSD} USD
 
 📦 *MI EQUIPO ACTUAL (A ENTREGAR):*
 📲 *Modelo:* ${tradeInName} (${tradeInCap})
-🔋 *Batería:* ${batteryStr}
+🔋 *Batería de mi equipo:* ${batteryStr}
 ✨ *Pantalla:* ${screenLabel}
 🛡️ *Biometría:* ${faceIdLabel}
 📦 *Caja y Accesorios:* ${boxStr}
@@ -193,7 +199,7 @@ ${config.showArsPrice ? 'ℹ️ _El importe en ARS se ajusta a la cotización de
 ¡Hola! Quiero consultar cuánto me toman mi equipo en parte de pago:
 
 📲 *Equipo:* ${tradeInName} (${tradeInCap})
-🔋 *Salud de Batería:* ${batteryStr}
+🔋 *Salud de Batería de mi equipo:* ${batteryStr}
 ✨ *Pantalla:* ${screenLabel}
 🛡️ *Biometría (Face ID / Huella):* ${faceIdLabel}
 📦 *Caja y Accesorios:* ${boxStr}
@@ -206,7 +212,7 @@ ${config.showArsPrice ? 'ℹ️ _El importe en ARS se ajusta a la cotización de
 ¡Hola! Quería consultar por la cotización de mi equipo en el Plan Canje:
 
 📲 *Equipo a entregar:* ${tradeInName} (${tradeInCap})
-🔋 *Batería:* ${batteryStr}
+🔋 *Batería de mi equipo:* ${batteryStr}
 ✨ *Pantalla:* ${screenLabel}
 🛡️ *Biometría:* ${faceIdLabel}
 📦 *Caja y Accesorios:* ${boxStr}
