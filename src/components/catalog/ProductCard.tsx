@@ -28,20 +28,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   const arsPrice = product.priceUSD * config.usdToArsRate;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 15 }}
-      animate={{ opacity: 1, y: 0 }}
-      whileHover={{ y: -4 }}
-      transition={{ duration: 0.25, ease: 'easeOut' }}
-      className={`group relative rounded-3xl p-4 sm:p-5 liquid-glass flex flex-col justify-between overflow-hidden transition-all duration-300 ${
+    <div
+      className={`group relative rounded-3xl p-4 sm:p-5 liquid-glass flex flex-col justify-between overflow-hidden transition-all duration-200 hover:-translate-y-1 ${
         isUsado 
           ? 'hover:border-purple-500/50 hover:shadow-[0_12px_35px_rgba(168,85,247,0.15)]' 
           : 'hover:border-white/40 hover:shadow-[0_12px_35px_rgba(255,255,255,0.1)]'
       }`}
     >
-      {/* Specular highlight */}
-      <div className="absolute -top-24 -left-24 w-48 h-48 bg-gradient-to-br from-white/10 to-transparent rounded-full blur-xl group-hover:scale-150 transition-transform pointer-events-none" />
-
       <div>
         {/* Badges superiores */}
         <div className="flex items-center justify-between gap-1.5 mb-3">
@@ -158,6 +151,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           </button>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 };

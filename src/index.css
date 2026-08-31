@@ -15,82 +15,43 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
-/* ─── SISTEMA OBSIDIAN & LIQUID GLASS (Estilo Space Black / Apple Pro) ─── */
+/* ─── SISTEMA OBSIDIAN & LIQUID GLASS (Estilo Space Black / Apple Pro Optimizado) ─── */
 
-/* Cristal Líquido Obsidiana Profundo */
+/* Cristal Líquido Obsidiana Profundo Optimizado (Cero lag en móviles) */
 .liquid-glass {
-  background: radial-gradient(
-    130% 130% at 50% -20%,
-    rgba(255, 255, 255, 0.12) 0%,
-    rgba(255, 255, 255, 0.03) 45%,
-    rgba(10, 10, 12, 0.75) 100%
+  background: linear-gradient(
+    180deg,
+    rgba(26, 26, 32, 0.72) 0%,
+    rgba(12, 12, 16, 0.88) 100%
   );
-  backdrop-filter: blur(30px) saturate(180%) brightness(110%);
-  -webkit-backdrop-filter: blur(30px) saturate(180%) brightness(110%);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 
-    0 25px 50px -12px rgba(0, 0, 0, 0.95),
-    inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.35),
-    inset 0 -1.5px 2px 0 rgba(0, 0, 0, 0.8),
-    0 0 0 1px rgba(255, 255, 255, 0.03);
-}
-
-/* Sheen interactivo que sigue el dedo en Blanco Platino / Titanio */
-.liquid-glass-sheen {
-  position: relative;
-}
-
-.liquid-glass-sheen::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: radial-gradient(
-    450px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-    rgba(255, 255, 255, 0.15),
-    rgba(200, 200, 220, 0.05) 40%,
-    transparent 70%
-  );
-  pointer-events: none;
-  opacity: var(--sheen-opacity, 0.7);
-  transition: opacity 0.3s ease;
-  z-index: 1;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.85);
+  contain: paint;
 }
 
 /* Modal y Elementos Elevados */
 .liquid-glass-elevated {
-  background: radial-gradient(
-    140% 140% at 50% -10%,
-    rgba(255, 255, 255, 0.16) 0%,
-    rgba(255, 255, 255, 0.04) 40%,
-    rgba(8, 8, 10, 0.92) 100%
+  background: linear-gradient(
+    180deg,
+    rgba(28, 28, 34, 0.88) 0%,
+    rgba(14, 14, 18, 0.96) 100%
   );
-  backdrop-filter: blur(40px) saturate(190%) brightness(115%);
-  -webkit-backdrop-filter: blur(40px) saturate(190%) brightness(115%);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  box-shadow: 
-    0 35px 80px -15px rgba(0, 0, 0, 0.98),
-    inset 0 2px 2px 0 rgba(255, 255, 255, 0.45),
-    inset 0 -2px 4px 0 rgba(0, 0, 0, 0.8),
-    0 0 40px rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.95);
 }
 
 /* Chips / Pills Negro Titanio */
 .liquid-pill {
-  background: rgba(255, 255, 255, 0.04);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.10);
-  box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.15), 0 4px 12px rgba(0, 0, 0, 0.5);
 }
 
 .liquid-pill-active {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, rgba(180, 180, 190, 0.12) 100%);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  box-shadow: 
-    0 0 25px rgba(255, 255, 255, 0.18),
-    inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.12);
 }
 
 /* Tipografía en Gradientes Titanio & Blanco Puro */
