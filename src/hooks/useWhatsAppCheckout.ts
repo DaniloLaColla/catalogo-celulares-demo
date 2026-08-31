@@ -81,7 +81,16 @@ ${deliveryOptions}
       ? `${tradeInState.batteryPercentage}%`
       : 'A verificar';
 
-    const boxStr = tradeInState?.hasBoxAndCable ? 'Sí (Caja y cable)' : 'Solo equipo';
+    const screenLabel = tradeInState?.screenStatus === 'intacta' 
+      ? 'Impecable (Sin rayas)' 
+      : tradeInState?.screenStatus === 'microrayones' 
+      ? 'Microrayones de uso' 
+      : tradeInState?.screenStatus === 'rajada' 
+      ? 'Rajada / Rota' 
+      : tradeInState?.screenStatus || 'Estándar';
+
+    const faceIdLabel = tradeInState?.faceIdWorking ? '100% Funcional' : 'Presenta fallas';
+    const boxStr = tradeInState?.hasBoxAndCable ? 'Sí (Caja y cable original)' : 'Solo equipo';
 
     if (isManual && tradeInState) {
       message = 
@@ -91,13 +100,14 @@ ${deliveryOptions}
 
 🎯 *EQUIPO QUE DESEO LLEVAR:*
 📱 *Modelo:* ${targetProduct.name} (${targetProduct.productType.toUpperCase()} - ${storage} - ${color})
+🛡️ *Garantía:* ${targetProduct.warranty}
 💵 *Precio de Lista:* $${targetProduct.priceUSD} USD
 
 📦 *MI EQUIPO ACTUAL (A ENTREGAR):*
 📲 *Modelo:* ${tradeInState.brand} ${tradeInState.model} (${tradeInState.storage})
 🔋 *Batería:* ${batteryStr}
-✨ *Pantalla:* ${tradeInState.screenStatus}
-🛡️ *Biometría (Face ID / Huella):* ${tradeInState.faceIdWorking ? '100% Funcional' : 'Presenta fallas'}
+✨ *Pantalla:* ${screenLabel}
+🛡️ *Biometría (Face ID / Huella):* ${faceIdLabel}
 📦 *Caja y Accesorios:* ${boxStr}
 
 📸 Adjunto fotos de mi equipo para que me pasen la cotización final y la diferencia a abonar. ¿Cómo coordinamos?`;
@@ -107,10 +117,16 @@ ${deliveryOptions}
         ? ` (~$${(realDifferenceUSD * config.usdToArsRate).toLocaleString('es-AR')} ARS)`
         : '';
 
+      const tradeInName = tradeInState 
+        ? `${tradeInState.brand} ${tradeInState.model}` 
+        : evaluation.tradeInModel;
+
+      const tradeInCap = tradeInState?.storage || evaluation.tradeInStorage;
+
       message = 
 `🔄 *CONSULTA PLAN CANJE | ${config.storeName}* 🔄
 
-¡Hola! Quería consultar por el Plan Canje para llevar este equipo:
+¡Hola! Quería consultar por el Plan Canje para entregar mi usado y llevar este equipo:
 
 🎯 *EQUIPO QUE DESEO LLEVAR:*
 📱 *Modelo:* ${targetProduct.name} (${targetProduct.productType.toUpperCase()} - ${storage} - ${color})
@@ -118,8 +134,11 @@ ${deliveryOptions}
 💵 *Valor Lista:* $${targetProduct.priceUSD} USD
 
 📦 *MI EQUIPO ACTUAL (A ENTREGAR):*
-📲 *Modelo:* ${evaluation.tradeInModel} (${evaluation.tradeInStorage})
+📲 *Modelo:* ${tradeInName} (${tradeInCap})
 🔋 *Batería:* ${batteryStr}
+✨ *Pantalla:* ${screenLabel}
+🛡️ *Biometría:* ${faceIdLabel}
+📦 *Caja y Accesorios:* ${boxStr}
 💰 *Toma Estimada:* $${evaluation.estimatedValueUSD} USD
 
 ───────────────────────────
@@ -149,6 +168,22 @@ ${config.showArsPrice ? 'ℹ️ _El importe en ARS se ajusta a la cotización de
 
     const boxStr = tradeInState?.hasBoxAndCable ? 'Sí (Caja y cable original)' : 'Solo equipo';
 
+    const screenLabel = tradeInState?.screenStatus === 'intacta' 
+      ? 'Impecable (Sin rayas)' 
+      : tradeInState?.screenStatus === 'microrayones' 
+      ? 'Microrayones de uso' 
+      : tradeInState?.screenStatus === 'rajada' 
+      ? 'Rajada / Rota' 
+      : tradeInState?.screenStatus || 'Estándar';
+
+    const faceIdLabel = tradeInState?.faceIdWorking ? '100% Funcional' : 'Presenta fallas';
+
+    const tradeInName = tradeInState 
+      ? `${tradeInState.brand} ${tradeInState.model}` 
+      : evaluation.tradeInModel;
+
+    const tradeInCap = tradeInState?.storage || evaluation.tradeInStorage;
+
     let message = '';
 
     if (isManual && tradeInState) {
@@ -157,23 +192,27 @@ ${config.showArsPrice ? 'ℹ️ _El importe en ARS se ajusta a la cotización de
 
 ¡Hola! Quiero consultar cuánto me toman mi equipo en parte de pago:
 
-📲 *Equipo:* ${tradeInState.brand} ${tradeInState.model} (${tradeInState.storage})
+📲 *Equipo:* ${tradeInName} (${tradeInCap})
 🔋 *Salud de Batería:* ${batteryStr}
-✨ *Pantalla:* ${tradeInState.screenStatus}
-📦 *Caja y Cable:* ${boxStr}
+✨ *Pantalla:* ${screenLabel}
+🛡️ *Biometría (Face ID / Huella):* ${faceIdLabel}
+📦 *Caja y Accesorios:* ${boxStr}
 
-📸 Adjunto fotos para recibir la cotización de un asesor.`;
+📸 Adjunto fotos de mi equipo para recibir la cotización de un asesor comercial.`;
     } else {
       message = 
 `🔄 *COTIZACIÓN PLAN CANJE | ${config.storeName}* 🔄
 
 ¡Hola! Quería consultar por la cotización de mi equipo en el Plan Canje:
 
-📲 *Equipo a entregar:* ${evaluation.tradeInModel} (${evaluation.tradeInStorage})
+📲 *Equipo a entregar:* ${tradeInName} (${tradeInCap})
 🔋 *Batería:* ${batteryStr}
+✨ *Pantalla:* ${screenLabel}
+🛡️ *Biometría:* ${faceIdLabel}
+📦 *Caja y Accesorios:* ${boxStr}
 💰 *Valuación estimada en la web:* $${evaluation.estimatedValueUSD} USD
 
-📸 Adjunto fotos del equipo. ¿Qué opciones tienen disponibles en stock para entregar este equipo en parte de pago?`;
+📸 Adjunto fotos del equipo para verificar el estado. ¿Qué opciones tienen disponibles en stock para entregar este equipo en parte de pago?`;
     }
 
     const encoded = encodeURIComponent(message);

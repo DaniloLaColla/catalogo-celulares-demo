@@ -63,10 +63,10 @@ export const CanjeCalculatorModal: React.FC<CanjeCalculatorModalProps> = ({
   const [loadingProgressText, setLoadingProgressText] = useState<string>('Analizando condición del equipo...');
 
   useEffect(() => {
-    if (initialTarget) {
-      setTargetProduct(initialTarget);
+    if (isOpen) {
+      setTargetProduct(initialTarget || null);
     }
-  }, [initialTarget, setTargetProduct]);
+  }, [isOpen, initialTarget, setTargetProduct]);
 
   useEffect(() => {
     if (step === 3 && isOpen && !isCalculating) {
