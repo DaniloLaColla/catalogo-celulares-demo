@@ -4,7 +4,9 @@ import {
   Sparkles, 
   FilterX,
   RefreshCw,
-  Box
+  Box,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
 import { useCatalog } from './hooks/useCatalog';
 import { useWhatsAppCheckout } from './hooks/useWhatsAppCheckout';
@@ -69,6 +71,27 @@ export function App() {
 
   const [isAdminOpen, setIsAdminOpen] = useState(false);
   const [currentMobileTab, setCurrentMobileTab] = useState<'catalog' | 'canje'>('catalog');
+
+  // Paginación del Catálogo Principal
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const ITEMS_PER_PAGE = 12;
+
+  // Resetear a la primera página cuando cambian los filtros
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedCategory, selectedTypeFilter, searchQuery, sortBy, onlyInStock]);
+
+  const totalProductsCount = filteredProducts.length;
+  const totalPages = Math.ceil(totalProductsCount / ITEMS_PER_PAGE) || 1;
+  const paginatedProducts = filteredProducts.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
+
+  const handlePageChange = (newPage: number) => {
+    setCurrentPage(newPage);
+    document.getElementById('catalog-products-section')?.scrollIntoView({ behavior: 'smooth' });
+  };
 
   // Sincronización dinámica de título de pestaña del navegador y favicon según la configuración de la tienda
   useEffect(() => {
@@ -206,19 +229,69 @@ export function App() {
         />
 
         {/* ─── GRID DE PRODUCTOS ─── */}
-        <section className="px-3 sm:px-6 my-4">
-          {filteredProducts.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
-              {filteredProducts.map((product) => (
-                <ProductCard
-                  key={product.id}
-                  product={product}
-                  config={config}
-                  onOpenDetail={handleOpenDetail}
-                  onOpenCanje={(prod) => handleOpenCanje(prod)}
-                  onQuickBuy={handleQuickBuy}
-                />
-              ))}
+        <section id="catalog-products-section" className="px-3 sm:px-6 my-4 scroll-mt-24">
+          {paginatedProducts.length > 0 ? (
+            <div className="space-y-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+                {paginatedProducts.map((product) => (
+                  <ProductCard
+                    key={product.id}
+                    product={product}
+                    config={config}
+                    onOpenDetail={handleOpenDetail}
+                    onOpenCanje={(prod) => handleOpenCanje(prod)}
+                    onQuickBuy={handleQuickBuy}
+                  />
+                ))}
+              </div>
+
+              {/* Controles de Paginación */}
+              {totalPages > 1 && (
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 sm:p-5 rounded-3xl liquid-glass border border-white/15">
+                  <span className="text-xs font-bold text-slate-300">
+                    Mostrando <strong className="text-white">{(currentPage - 1) * ITEMS_PER_PAGE + 1}</strong> - <strong className="text-white">{Math.min(currentPage * ITEMS_PER_PAGE, totalProductsCount)}</strong> de <strong className="text-white">{totalProductsCount}</strong> equipos
+                  </span>
+
+                  <div className="flex items-center gap-1.5 flex-wrap justify-center">
+                    <button
+                      type="button"
+                      onClick={() => handlePageChange(currentPage - 1)}
+                      disabled={currentPage === 1}
+                      className="flex items-center gap-1 py-2 px-3.5 rounded-2xl bg-white/10 hover:bg-white/20 disabled:opacity-30 disabled:pointer-events-none text-xs font-bold text-white border border-white/10 transition-all active:scale-95"
+                    >
+                      <ChevronLeft size={16} />
+                      <span className="hidden xs:inline">Anterior</span>
+                    </button>
+
+                    <div className="flex items-center gap-1 px-1">
+                      {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+                        <button
+                          key={pageNum}
+                          type="button"
+                          onClick={() => handlePageChange(pageNum)}
+                          className={`w-8 h-8 rounded-xl text-xs font-black transition-all ${
+                            currentPage === pageNum
+                              ? 'bg-white text-black shadow-lg scale-105'
+                              : 'text-slate-400 hover:text-white hover:bg-white/10'
+                          }`}
+                        >
+                          {pageNum}
+                        </button>
+                      ))}
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => handlePageChange(currentPage + 1)}
+                      disabled={currentPage === totalPages}
+                      className="flex items-center gap-1 py-2 px-3.5 rounded-2xl bg-white/10 hover:bg-white/20 disabled:opacity-30 disabled:pointer-events-none text-xs font-bold text-white border border-white/10 transition-all active:scale-95"
+                    >
+                      <span className="hidden xs:inline">Siguiente</span>
+                      <ChevronRight size={16} />
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           ) : (
             <div className="py-16 text-center rounded-3xl liquid-glass p-8 border border-white/10 my-6 flex flex-col items-center justify-center">

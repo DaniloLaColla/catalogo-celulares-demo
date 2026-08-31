@@ -43,6 +43,8 @@ import {
   Sliders,
   ChevronDown,
   ChevronUp,
+  ChevronLeft,
+  ChevronRight,
   RotateCcw,
   KeyRound,
   Save,
@@ -373,6 +375,21 @@ export const AdminDrawer: React.FC<AdminDrawerProps> = ({
 
     return matchCategory && matchType && matchStock && matchSearch;
   });
+
+  // Paginación de Lista de Inventario en Admin
+  const [adminCurrentPage, setAdminCurrentPage] = useState<number>(1);
+  const ADMIN_ITEMS_PER_PAGE = 8;
+
+  // Resetear a pág 1 al cambiar filtros de admin
+  useEffect(() => {
+    setAdminCurrentPage(1);
+  }, [adminSearchQuery, adminCategoryFilter, adminTypeFilter, adminStockFilter]);
+
+  const adminTotalPages = Math.ceil(adminFilteredProducts.length / ADMIN_ITEMS_PER_PAGE) || 1;
+  const paginatedAdminProducts = adminFilteredProducts.slice(
+    (adminCurrentPage - 1) * ADMIN_ITEMS_PER_PAGE,
+    adminCurrentPage * ADMIN_ITEMS_PER_PAGE
+  );
 
   // Presets guardados permanentemente por categoría
   const [customPresets, setCustomPresets] = useState<CustomPresetsState>(() => {
@@ -1880,7 +1897,7 @@ export const AdminDrawer: React.FC<AdminDrawerProps> = ({
                           </button>
                         </div>
                       ) : (
-                        adminFilteredProducts.map((p) => (
+                        paginatedAdminProducts.map((p) => (
                           <div
                             key={p.id}
                             className={`p-3 rounded-2xl border flex items-center justify-between gap-3 transition-all ${
@@ -1951,6 +1968,41 @@ export const AdminDrawer: React.FC<AdminDrawerProps> = ({
                         ))
                       )}
                     </div>
+
+                    {/* Paginación del Inventario Admin */}
+                    {adminTotalPages > 1 && (
+                      <div className="flex items-center justify-between gap-2 pt-2 border-t border-white/10">
+                        <span className="text-[11px] text-slate-400">
+                          Mostrando <strong>{(adminCurrentPage - 1) * ADMIN_ITEMS_PER_PAGE + 1}</strong>-<strong>{Math.min(adminCurrentPage * ADMIN_ITEMS_PER_PAGE, adminFilteredProducts.length)}</strong> de <strong>{adminFilteredProducts.length}</strong>
+                        </span>
+
+                        <div className="flex items-center gap-1">
+                          <button
+                            type="button"
+                            onClick={() => setAdminCurrentPage((p) => Math.max(1, p - 1))}
+                            disabled={adminCurrentPage === 1}
+                            className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 disabled:opacity-30 disabled:pointer-events-none text-white text-xs font-bold transition-all"
+                            title="Página anterior"
+                          >
+                            <ChevronLeft size={14} />
+                          </button>
+
+                          <span className="text-[11px] font-bold px-2 py-0.5 rounded bg-white/10 text-white">
+                            {adminCurrentPage} / {adminTotalPages}
+                          </span>
+
+                          <button
+                            type="button"
+                            onClick={() => setAdminCurrentPage((p) => Math.min(adminTotalPages, p + 1))}
+                            disabled={adminCurrentPage === adminTotalPages}
+                            className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 disabled:opacity-30 disabled:pointer-events-none text-white text-xs font-bold transition-all"
+                            title="Página siguiente"
+                          >
+                            <ChevronRight size={14} />
+                          </button>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
 
