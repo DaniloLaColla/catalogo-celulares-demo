@@ -15,7 +15,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     image: 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&w=800&q=80',
     gallery: [
       'https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1695048132958-86f1e1ffb157?auto=format&fit=crop&w=800&q=80'
+      'https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&w=800&q=80'
     ],
     storageOptions: ['256GB', '512GB', '1TB'],
     colorOptions: [
@@ -41,7 +41,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     originalPriceUSD: 1280,
     specs: 'A18 Pro · Pantalla 6.3" ProMotion 120Hz · Zoom 5x',
     description: 'Equipo NUEVO SELLADO. Chasis de titanio grado 5, botón Control de Cámara y puerto USB 3 de alta velocidad.',
-    image: 'https://images.unsplash.com/photo-1695048132958-86f1e1ffb157?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&w=800&q=80',
     storageOptions: ['128GB', '256GB', '512GB'],
     colorOptions: [
       { name: 'Titanio Natural', hex: '#9E9893' },
@@ -115,7 +115,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     originalPriceUSD: 999,
     specs: 'A17 Pro · 8GB RAM · Chasis Titanio · Impecable',
     description: 'Equipo USADO SELECCIONADO en estado estético 10/10. Sin detalles, peritado técnicamente al 100%. Color único publicado.',
-    image: 'https://images.unsplash.com/photo-1695048132958-86f1e1ffb157?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&w=800&q=80',
     storageOptions: ['128GB'],
     colorOptions: [
       { name: 'Titanio Blanco (Único)', hex: '#E3E4E5' }
@@ -137,7 +137,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     originalPriceUSD: 850,
     specs: 'A16 Bionic · Dynamic Island · USB-C · 48MP',
     description: 'Equipo NUEVO SELLADO. Pantalla con Dynamic Island, puerto USB-C y sensor principal de 48 megapíxeles.',
-    image: 'https://images.unsplash.com/photo-1695048132958-86f1e1ffb157?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&w=800&q=80',
     storageOptions: ['128GB', '256GB'],
     colorOptions: [
       { name: 'Negro', hex: '#2A2B2D' },
@@ -161,7 +161,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     originalPriceUSD: 750,
     specs: 'A16 Bionic · Dynamic Island · USB-C · Impecable',
     description: 'Equipo USADO en condición excelente. Incluye vidrio templado y cable USB-C original.',
-    image: 'https://images.unsplash.com/photo-1695048132958-86f1e1ffb157?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&w=800&q=80',
     storageOptions: ['128GB'],
     colorOptions: [
       { name: 'Negro (Único)', hex: '#2A2B2D' }

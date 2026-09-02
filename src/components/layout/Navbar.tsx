@@ -48,9 +48,15 @@ export const Navbar: React.FC<NavbarProps> = ({
     window.open(`https://instagram.com/${cleanHandle}`, '_blank', 'noopener,noreferrer');
   };
 
+  const isLeather = config.customSettings?.aesthetic === 'leather-luxury';
+
   return (
     <>
-      <header className="sticky top-0 z-40 w-full px-3 sm:px-8 py-2.5 sm:py-3.5 backdrop-blur-2xl bg-[#000000]/85 border-b border-white/10 transition-all">
+      <header className={`sticky top-0 z-40 w-full px-3 sm:px-8 py-2.5 sm:py-3.5 backdrop-blur-2xl transition-all ${
+        isLeather 
+          ? 'bg-[#0B0B0E]/90 border-b border-zinc-800/80'
+          : 'bg-[#000000]/85 border-b border-white/10'
+      }`}>
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-2 sm:gap-3">
           {/* Brand Logo & Info */}
           <div 
@@ -88,9 +94,13 @@ export const Navbar: React.FC<NavbarProps> = ({
                   type="button"
                   onClick={handleOpenInstagram}
                   title={`Tienda Verificada · Clic para ver @${(config.instagramUser || 'teststore.oficial').replace('@', '')} en Instagram`}
-                  className="inline-flex items-center gap-1 px-1.5 sm:px-2 py-0.5 rounded-full bg-gradient-to-r from-sky-500/20 to-blue-500/20 hover:from-sky-500/30 hover:to-blue-500/30 border border-sky-400/40 hover:border-sky-400 text-sky-300 hover:text-sky-200 transition-all shadow-[0_0_12px_rgba(56,189,248,0.25)] active:scale-95 group/badge cursor-pointer shrink-0"
+                  className={`inline-flex items-center gap-1 px-1.5 sm:px-2 py-0.5 rounded-full border transition-all active:scale-95 group/badge cursor-pointer shrink-0 ${
+                    isLeather
+                      ? 'bg-zinc-800 text-zinc-200 border-zinc-700 hover:border-zinc-500'
+                      : 'bg-gradient-to-r from-sky-500/20 to-blue-500/20 hover:from-sky-500/30 hover:to-blue-500/30 border-sky-400/40 hover:border-sky-400 text-sky-300 hover:text-sky-200 shadow-[0_0_12px_rgba(56,189,248,0.25)]'
+                  }`}
                 >
-                  <BadgeCheck size={12} className="text-sky-400 fill-sky-400/30 group-hover/badge:scale-110 transition-transform shrink-0" />
+                  <BadgeCheck size={12} className={isLeather ? 'text-zinc-300' : 'text-sky-400 fill-sky-400/30'} />
                   <span className="text-[9px] sm:text-[10px] font-black tracking-tight">
                     Verificada
                   </span>
@@ -124,7 +134,11 @@ export const Navbar: React.FC<NavbarProps> = ({
                 type="button"
                 onClick={onRefreshDollar}
                 title={`Dólar Blue Venta en Vivo · Última actualización: ${config.lastDollarFetchTime || 'Reciente'}. Clic para refrescar.`}
-                className="flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 sm:py-1.5 rounded-xl sm:rounded-2xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/25 text-[11px] sm:text-xs font-semibold text-slate-200 transition-all cursor-pointer group shrink-0"
+                className={`flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 sm:py-1.5 rounded-xl sm:rounded-2xl border text-[11px] sm:text-xs font-semibold transition-all cursor-pointer group shrink-0 ${
+                  isLeather
+                    ? 'bg-zinc-900 hover:bg-zinc-800 text-zinc-200 border-zinc-800'
+                    : 'bg-emerald-500/10 hover:bg-emerald-500/20 border-emerald-500/25 text-slate-200'
+                }`}
               >
                 <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
                 <span className="text-[10px] sm:text-[11px] text-slate-400 hidden md:inline">Blue Venta:</span>
@@ -142,9 +156,13 @@ export const Navbar: React.FC<NavbarProps> = ({
             <button
               type="button"
               onClick={onOpenCanje}
-              className="hidden sm:flex items-center gap-1.5 py-1.5 sm:py-2 px-3 sm:px-4 rounded-xl sm:rounded-2xl bg-white/10 hover:bg-white/20 text-white border border-white/20 text-xs font-bold shadow-[0_0_15px_rgba(255,255,255,0.1)] active:scale-95 transition-all"
+              className={`hidden sm:flex items-center gap-1.5 py-1.5 sm:py-2 px-3 sm:px-4 rounded-xl sm:rounded-2xl text-xs font-bold transition-all active:scale-95 ${
+                isLeather
+                  ? 'bg-white hover:bg-zinc-200 text-black shadow-md border border-white font-extrabold'
+                  : 'bg-white/10 hover:bg-white/20 text-white border border-white/20 shadow-[0_0_15px_rgba(255,255,255,0.1)]'
+              }`}
             >
-              <RefreshCw size={13} className="animate-spin-slow text-slate-200" />
+              <RefreshCw size={13} className={isLeather ? 'text-black' : 'animate-spin-slow text-slate-200'} />
               <span>Plan Canje</span>
             </button>
 
@@ -152,7 +170,11 @@ export const Navbar: React.FC<NavbarProps> = ({
             <button
               type="button"
               onClick={onOpenAdmin}
-              className="p-2 sm:p-2.5 rounded-xl sm:rounded-2xl bg-white/5 hover:bg-white/15 text-slate-300 hover:text-white border border-white/10 active:scale-95 transition-all shrink-0"
+              className={`p-2 sm:p-2.5 rounded-xl sm:rounded-2xl border active:scale-95 transition-all shrink-0 ${
+                isLeather
+                  ? 'bg-zinc-900 hover:bg-zinc-800 text-zinc-300 hover:text-white border-zinc-800'
+                  : 'bg-white/5 hover:bg-white/15 text-slate-300 hover:text-white border border-white/10'
+              }`}
               title="Panel de Administración"
             >
               <Lock size={15} />

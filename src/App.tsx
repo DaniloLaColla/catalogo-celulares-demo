@@ -160,18 +160,51 @@ export function App() {
 
       <main className="max-w-7xl mx-auto w-full px-2 sm:px-6 flex-1">
         {/* ─── HERO BANNER ─── */}
-        <section className="px-3 pt-4 sm:pt-6 pb-2">
-          <div className={`relative rounded-3xl p-5 sm:p-8 overflow-hidden transition-all ${
-            config.customSettings?.aesthetic === 'leather-luxury'
-              ? 'bg-[#111115]/95 border border-zinc-800/90 shadow-[0_25px_60px_rgba(0,0,0,0.95)]'
-              : 'liquid-glass-elevated border border-white/20'
-          }`}>
-            <div className="absolute top-0 right-0 w-48 h-48 bg-gradient-to-bl from-white/5 to-transparent rounded-full blur-2xl pointer-events-none" />
-            <div className="absolute -bottom-10 -left-10 w-48 h-48 bg-gradient-to-tr from-zinc-600/10 to-transparent rounded-full blur-2xl pointer-events-none" />
+        {config.customSettings?.aesthetic === 'leather-luxury' ? (
+          <section className="px-4 pt-6 pb-2 text-center max-w-3xl mx-auto">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/10 border border-white/15 text-zinc-300 text-[11px] font-bold tracking-wide uppercase mb-3">
+              <Sparkles size={12} className="text-white" />
+              <span>{config.heroTagline || 'Villa Regina, Río Negro'}</span>
+            </div>
 
-            <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
-              <div className="max-w-2xl">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-slate-200 text-[11px] font-bold tracking-wide uppercase mb-3">
+            <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight leading-tight">
+              {config.heroTitle || 'Tecnología Apple'}
+            </h1>
+
+            <p className="text-xs sm:text-sm text-zinc-400 mt-2.5 max-w-xl mx-auto leading-relaxed">
+              {config.heroSubtitle || 'Equipos Nuevos Sellados y Usados Seleccionados con Garantía y Plan Canje'}
+            </p>
+
+            {/* Badges de Confianza */}
+            <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-6 mt-4 text-[11px] sm:text-xs font-semibold text-zinc-300">
+              <div className="flex items-center gap-1.5 text-zinc-200">
+                <Box size={14} className="text-white" />
+                <span>{config.heroWarrantyNew || 'Sellados: Gtía Apple 1 Año'}</span>
+              </div>
+              <span className="text-zinc-600 hidden sm:inline">·</span>
+              <div className="flex items-center gap-1.5 text-zinc-300">
+                <ShieldCheck size={14} />
+                <span>{config.heroWarrantyUsed || 'Usados Seleccionados'}</span>
+              </div>
+              {config.showHeroCanjeBadge !== false && (
+                <>
+                  <span className="text-zinc-600 hidden sm:inline">·</span>
+                  <div className="flex items-center gap-1.5 text-emerald-400">
+                    <RefreshCw size={14} className="animate-spin-slow" />
+                    <span>Plan Canje Inmediato</span>
+                  </div>
+                </>
+              )}
+            </div>
+          </section>
+        ) : (
+          <section className="px-3 pt-4 sm:pt-6 pb-2">
+            <div className="relative rounded-3xl p-5 sm:p-8 liquid-glass-elevated border border-white/20 overflow-hidden">
+              <div className="absolute top-0 right-0 w-48 h-48 bg-gradient-to-bl from-white/10 to-transparent rounded-full blur-2xl pointer-events-none" />
+              <div className="absolute -bottom-10 -left-10 w-48 h-48 bg-gradient-to-tr from-zinc-600/10 to-transparent rounded-full blur-2xl pointer-events-none" />
+
+              <div className="relative z-10 max-w-2xl">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-slate-200 text-[11px] font-bold tracking-wide uppercase mb-3">
                   <Sparkles size={13} className="text-white" />
                   <span>{config.heroTagline || `Catálogo Oficial · ${config.storeName}`}</span>
                 </div>
@@ -190,7 +223,7 @@ export function App() {
                 <p className="text-xs sm:text-sm text-slate-300 mt-2 max-w-xl leading-relaxed">
                   {config.heroSubtitle || (
                     <>
-                      Equipos <strong className="text-white">Sellados con Garantía Oficial Apple (1 Año)</strong> y <strong className="text-zinc-300">Usados Seleccionados con 1 Mes de Garantía</strong>. Precios en ARS sincronizados en tiempo real con el <strong className="text-emerald-400">Dólar Blue Venta</strong>.
+                      Equipos <strong className="text-white">Sellados con Garantía Oficial Apple (1 Año)</strong> y <strong className="text-purple-300">Usados Seleccionados con 1 Mes de Garantía</strong>. Precios en ARS sincronizados en tiempo real con el <strong className="text-emerald-400">Dólar Blue Venta</strong>.
                     </>
                   )}
                 </p>
@@ -201,32 +234,21 @@ export function App() {
                     <Box size={14} />
                     <span>{config.heroWarrantyNew || 'Sellados: Gtía Apple 1 Año'}</span>
                   </div>
-                  <div className="flex items-center gap-1.5 text-zinc-300">
+                  <div className="flex items-center gap-1.5 text-purple-300">
                     <ShieldCheck size={14} />
                     <span>{config.heroWarrantyUsed || 'Usados: 1 Mes Gtía'}</span>
                   </div>
                   {config.showHeroCanjeBadge !== false && (
-                    <div className="flex items-center gap-1.5 text-emerald-400">
+                    <div className="flex items-center gap-1.5 text-emerald-300">
                       <RefreshCw size={14} className="animate-spin-slow" />
-                      <span>Plan Canje con Valuación Inmediata</span>
+                      <span>Plan Canje Disponible</span>
                     </div>
                   )}
                 </div>
               </div>
-
-              {/* Emblema Boutique en Pantallas Medianas/Grandes */}
-              {config.logoUrl && config.customSettings?.aesthetic === 'leather-luxury' && (
-                <div className="hidden sm:flex flex-col items-center justify-center p-4 rounded-3xl bg-black/40 border border-zinc-800 shadow-2xl shrink-0 text-center">
-                  <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-white/20 p-1 shadow-inner bg-black">
-                    <img src={config.logoUrl} alt={config.storeName} className="w-full h-full object-contain rounded-full" />
-                  </div>
-                  <span className="mt-2 text-xs font-black text-white tracking-wider uppercase">iStore Regina</span>
-                  <span className="text-[10px] text-zinc-400 font-medium">Boutique Autorizada</span>
-                </div>
-              )}
             </div>
-          </div>
-        </section>
+          </section>
+        )}
 
         {/* ─── NAVEGACIÓN DE CATEGORÍAS ─── */}
         <section className="mt-2">
@@ -235,6 +257,7 @@ export function App() {
             selectedCategory={selectedCategory}
             onSelectCategory={setSelectedCategory}
             products={products}
+            aesthetic={config.customSettings?.aesthetic}
           />
         </section>
 
@@ -249,6 +272,7 @@ export function App() {
           onlyInStock={onlyInStock}
           onToggleOnlyInStock={() => setOnlyInStock(!onlyInStock)}
           totalResults={filteredProducts.length}
+          aesthetic={config.customSettings?.aesthetic}
         />
 
         {/* ─── GRID DE PRODUCTOS ─── */}

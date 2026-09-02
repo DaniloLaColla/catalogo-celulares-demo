@@ -12,6 +12,7 @@ interface SearchFilterBarProps {
   onlyInStock: boolean;
   onToggleOnlyInStock: () => void;
   totalResults: number;
+  aesthetic?: string;
 }
 
 export const SearchFilterBar: React.FC<SearchFilterBarProps> = ({
@@ -23,8 +24,11 @@ export const SearchFilterBar: React.FC<SearchFilterBarProps> = ({
   onSortChange,
   onlyInStock,
   onToggleOnlyInStock,
-  totalResults
+  totalResults,
+  aesthetic
 }) => {
+  const isLeather = aesthetic === 'leather-luxury';
+
   return (
     <div className="w-full px-3 sm:px-6 my-2.5 sm:my-3 space-y-2.5 sm:space-y-3">
       {/* ─── FILTRO RÁPIDO: SELLADOS VS USADOS ─── */}
@@ -34,8 +38,8 @@ export const SearchFilterBar: React.FC<SearchFilterBarProps> = ({
           onClick={() => onSelectTypeFilter('Todos')}
           className={`px-3 sm:px-3.5 py-1.5 rounded-xl text-[11px] sm:text-xs font-bold transition-all shrink-0 ${
             selectedTypeFilter === 'Todos'
-              ? 'bg-white/20 text-white border border-white/30 shadow-sm'
-              : 'bg-white/5 text-slate-400 border border-white/10 hover:text-white'
+              ? isLeather ? 'bg-white text-black font-extrabold shadow-sm border border-white' : 'bg-white/20 text-white border border-white/30 shadow-sm'
+              : isLeather ? 'bg-[#141418] text-zinc-400 border border-zinc-800 hover:text-white' : 'bg-white/5 text-slate-400 border border-white/10 hover:text-white'
           }`}
         >
           Todos ({totalResults})
@@ -46,12 +50,12 @@ export const SearchFilterBar: React.FC<SearchFilterBarProps> = ({
           onClick={() => onSelectTypeFilter('Sellado')}
           className={`flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 rounded-xl text-[11px] sm:text-xs font-bold transition-all shrink-0 ${
             selectedTypeFilter === 'Sellado'
-              ? 'bg-cyan-500/25 text-cyan-300 border border-cyan-400/50 shadow-[0_0_12px_rgba(0,240,255,0.25)]'
-              : 'bg-white/5 text-slate-400 border border-white/10 hover:text-cyan-300'
+              ? isLeather ? 'bg-white text-black font-extrabold shadow-sm border border-white' : 'bg-cyan-500/25 text-cyan-300 border border-cyan-400/50 shadow-[0_0_12px_rgba(0,240,255,0.25)]'
+              : isLeather ? 'bg-[#141418] text-zinc-400 border border-zinc-800 hover:text-white' : 'bg-white/5 text-slate-400 border border-white/10 hover:text-cyan-300'
           }`}
         >
-          <Box size={13} className="text-cyan-400" />
-          <span>📦 Sellados (Gtía Apple)</span>
+          <Box size={13} className={selectedTypeFilter === 'Sellado' && isLeather ? 'text-black' : isLeather ? 'text-zinc-400' : 'text-cyan-400'} />
+          <span>Sellados (Gtía Apple)</span>
         </button>
 
         <button
@@ -59,12 +63,12 @@ export const SearchFilterBar: React.FC<SearchFilterBarProps> = ({
           onClick={() => onSelectTypeFilter('Usado')}
           className={`flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 rounded-xl text-[11px] sm:text-xs font-bold transition-all shrink-0 ${
             selectedTypeFilter === 'Usado'
-              ? 'bg-purple-500/25 text-purple-300 border border-purple-400/50 shadow-[0_0_12px_rgba(168,85,247,0.25)]'
-              : 'bg-white/5 text-slate-400 border border-white/10 hover:text-purple-300'
+              ? isLeather ? 'bg-white text-black font-extrabold shadow-sm border border-white' : 'bg-purple-500/25 text-purple-300 border border-purple-400/50 shadow-[0_0_12px_rgba(168,85,247,0.25)]'
+              : isLeather ? 'bg-[#141418] text-zinc-400 border border-zinc-800 hover:text-white' : 'bg-white/5 text-slate-400 border border-white/10 hover:text-purple-300'
           }`}
         >
-          <RefreshCw size={13} className="text-purple-400" />
-          <span>🔄 Usados (1 Mes Gtía)</span>
+          <RefreshCw size={13} className={selectedTypeFilter === 'Usado' && isLeather ? 'text-black' : isLeather ? 'text-zinc-400' : 'text-purple-400'} />
+          <span>Usados (Peritados)</span>
         </button>
       </div>
 
@@ -81,7 +85,11 @@ export const SearchFilterBar: React.FC<SearchFilterBarProps> = ({
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
             placeholder="Buscar por modelo, capacidad o batería..."
-            className="w-full pl-9 pr-9 py-2 sm:py-2.5 rounded-2xl liquid-pill text-xs sm:text-sm font-medium text-white placeholder-slate-400 focus:outline-none focus:border-cyan-400/50 focus:ring-1 focus:ring-cyan-400/40 transition-all"
+            className={`w-full pl-9 pr-9 py-2 sm:py-2.5 rounded-2xl text-xs sm:text-sm font-medium transition-all focus:outline-none ${
+              isLeather
+                ? 'bg-[#121216] border border-zinc-800 text-white placeholder-zinc-500 focus:border-zinc-600'
+                : 'liquid-pill text-white placeholder-slate-400 focus:border-cyan-400/50 focus:ring-1 focus:ring-cyan-400/40'
+            }`}
           />
 
           {searchQuery && (
@@ -100,7 +108,11 @@ export const SearchFilterBar: React.FC<SearchFilterBarProps> = ({
           <select
             value={sortBy}
             onChange={(e) => onSortChange(e.target.value as any)}
-            className="flex-1 sm:flex-initial liquid-pill text-[11px] sm:text-xs font-semibold text-slate-200 py-2 px-2.5 sm:px-3 rounded-2xl focus:outline-none border-white/10 cursor-pointer bg-dark-900"
+            className={`flex-1 sm:flex-initial text-[11px] sm:text-xs font-semibold py-2 px-2.5 sm:px-3 rounded-2xl focus:outline-none cursor-pointer ${
+              isLeather
+                ? 'bg-[#121216] text-zinc-300 border border-zinc-800 focus:border-zinc-600'
+                : 'liquid-pill text-slate-200 border-white/10 bg-dark-900'
+            }`}
           >
             <option value="featured">✨ Destacados</option>
             <option value="price-asc">💵 Menor Precio</option>
@@ -112,8 +124,8 @@ export const SearchFilterBar: React.FC<SearchFilterBarProps> = ({
             onClick={onToggleOnlyInStock}
             className={`flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-3 py-2 rounded-2xl text-[11px] sm:text-xs font-semibold border transition-all shrink-0 ${
               onlyInStock
-                ? 'bg-emerald-500/20 border-emerald-400/40 text-emerald-300'
-                : 'liquid-pill text-slate-400 border-white/10 hover:text-slate-200'
+                ? isLeather ? 'bg-zinc-800 text-emerald-400 border-emerald-500/40' : 'bg-emerald-500/20 border-emerald-400/40 text-emerald-300'
+                : isLeather ? 'bg-[#121216] text-zinc-400 border-zinc-800 hover:text-white' : 'liquid-pill text-slate-400 border-white/10 hover:text-slate-200'
             }`}
           >
             <span className={`w-1.5 h-1.5 rounded-full ${onlyInStock ? 'bg-emerald-400' : 'bg-slate-500'}`} />
