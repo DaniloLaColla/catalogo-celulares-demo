@@ -4,6 +4,7 @@ import { INITIAL_PRODUCTS } from '../data/initialProducts';
 import { fetchLiveDollarBlue } from '../services/dollarService';
 import { supabase, isSupabaseConfigured } from '../services/supabaseClient';
 import { DEFAULT_TENANT } from '../services/tenantService';
+import { loadMasterTradeInDevices } from '../services/canjeMasterService';
 
 const DEFAULT_CONFIG: StoreConfig = {
   storeName: 'TestStore',
@@ -174,6 +175,9 @@ export function useCatalog(currentTenant?: Tenant) {
 
       try {
         setIsLoading(true);
+
+        // Cargar modelos maestros de canje en segundo plano
+        loadMasterTradeInDevices().catch(() => {});
 
         // 1. Cargar Configuración de Tienda
         let configQuery = supabase.from('store_config').select('*');

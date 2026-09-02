@@ -113,3 +113,60 @@ END $$;
 
 CREATE INDEX IF NOT EXISTS idx_quotations_tenant ON public.quotations(tenant_id);
 
+-- 7. Tabla Maestra Global de Dispositivos de Plan Canje (Master Trade-In Devices)
+CREATE TABLE IF NOT EXISTS public.master_trade_in_devices (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    brand TEXT NOT NULL,
+    model TEXT NOT NULL,
+    capacities JSONB NOT NULL,
+    display_order INTEGER DEFAULT 0,
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE(brand, model)
+);
+
+ALTER TABLE public.master_trade_in_devices ENABLE ROW LEVEL SECURITY;
+
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'master_trade_in_devices' AND policyname = 'Allow public read on master_trade_in_devices') THEN
+        CREATE POLICY "Allow public read on master_trade_in_devices" ON public.master_trade_in_devices FOR SELECT USING (true);
+    END IF;
+    IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'master_trade_in_devices' AND policyname = 'Allow public insert on master_trade_in_devices') THEN
+        CREATE POLICY "Allow public insert on master_trade_in_devices" ON public.master_trade_in_devices FOR INSERT WITH CHECK (true);
+    END IF;
+    IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'master_trade_in_devices' AND policyname = 'Allow public update on master_trade_in_devices') THEN
+        CREATE POLICY "Allow public update on master_trade_in_devices" ON public.master_trade_in_devices FOR UPDATE USING (true);
+    END IF;
+END $$;
+
+CREATE INDEX IF NOT EXISTS idx_master_canje_brand_order ON public.master_trade_in_devices(brand, display_order);
+
+-- Población inicial del catálogo maestro de canje
+INSERT INTO public.master_trade_in_devices (brand, model, capacities, display_order) VALUES
+('Apple', 'iPhone 16 Pro Max', '[{"storage": "256GB", "basePriceUSD": 950}, {"storage": "512GB", "basePriceUSD": 1050}, {"storage": "1TB", "basePriceUSD": 1150}]'::jsonb, 1),
+('Apple', 'iPhone 16 Pro', '[{"storage": "128GB", "basePriceUSD": 820}, {"storage": "256GB", "basePriceUSD": 900}, {"storage": "512GB", "basePriceUSD": 980}]'::jsonb, 2),
+('Apple', 'iPhone 16 Plus', '[{"storage": "128GB", "basePriceUSD": 700}, {"storage": "256GB", "basePriceUSD": 780}]'::jsonb, 3),
+('Apple', 'iPhone 16', '[{"storage": "128GB", "basePriceUSD": 650}, {"storage": "256GB", "basePriceUSD": 720}]'::jsonb, 4),
+('Apple', 'iPhone 15 Pro Max', '[{"storage": "256GB", "basePriceUSD": 850}, {"storage": "512GB", "basePriceUSD": 930}, {"storage": "1TB", "basePriceUSD": 1000}]'::jsonb, 5),
+('Apple', 'iPhone 15 Pro', '[{"storage": "128GB", "basePriceUSD": 720}, {"storage": "256GB", "basePriceUSD": 780}, {"storage": "512GB", "basePriceUSD": 840}]'::jsonb, 6),
+('Apple', 'iPhone 15 Plus', '[{"storage": "128GB", "basePriceUSD": 600}, {"storage": "256GB", "basePriceUSD": 660}]'::jsonb, 7),
+('Apple', 'iPhone 15', '[{"storage": "128GB", "basePriceUSD": 540}, {"storage": "256GB", "basePriceUSD": 600}]'::jsonb, 8),
+('Apple', 'iPhone 14 Pro Max', '[{"storage": "128GB", "basePriceUSD": 660}, {"storage": "256GB", "basePriceUSD": 710}, {"storage": "512GB", "basePriceUSD": 760}]'::jsonb, 9),
+('Apple', 'iPhone 14 Pro', '[{"storage": "128GB", "basePriceUSD": 570}, {"storage": "256GB", "basePriceUSD": 620}, {"storage": "512GB", "basePriceUSD": 670}]'::jsonb, 10),
+('Apple', 'iPhone 14 Plus', '[{"storage": "128GB", "basePriceUSD": 460}, {"storage": "256GB", "basePriceUSD": 510}]'::jsonb, 11),
+('Apple', 'iPhone 14', '[{"storage": "128GB", "basePriceUSD": 420}, {"storage": "256GB", "basePriceUSD": 470}]'::jsonb, 12),
+('Apple', 'iPhone 13 Pro Max', '[{"storage": "128GB", "basePriceUSD": 510}, {"storage": "256GB", "basePriceUSD": 560}, {"storage": "512GB", "basePriceUSD": 610}]'::jsonb, 13),
+('Apple', 'iPhone 13 Pro', '[{"storage": "128GB", "basePriceUSD": 440}, {"storage": "256GB", "basePriceUSD": 490}, {"storage": "512GB", "basePriceUSD": 530}]'::jsonb, 14),
+('Apple', 'iPhone 13', '[{"storage": "128GB", "basePriceUSD": 360}, {"storage": "256GB", "basePriceUSD": 410}]'::jsonb, 15),
+('Apple', 'iPhone 12 Pro Max', '[{"storage": "128GB", "basePriceUSD": 390}, {"storage": "256GB", "basePriceUSD": 430}]'::jsonb, 16),
+('Apple', 'iPhone 12 Pro', '[{"storage": "128GB", "basePriceUSD": 330}, {"storage": "256GB", "basePriceUSD": 370}]'::jsonb, 17),
+('Apple', 'iPhone 12', '[{"storage": "64GB", "basePriceUSD": 240}, {"storage": "128GB", "basePriceUSD": 280}]'::jsonb, 18),
+('Apple', 'iPhone 11', '[{"storage": "64GB", "basePriceUSD": 170}, {"storage": "128GB", "basePriceUSD": 210}]'::jsonb, 19),
+('Samsung', 'Galaxy S23 Ultra', '[{"storage": "256GB", "basePriceUSD": 580}, {"storage": "512GB", "basePriceUSD": 640}]'::jsonb, 20),
+('Samsung', 'Galaxy S23 Plus', '[{"storage": "256GB", "basePriceUSD": 420}]'::jsonb, 21),
+('Samsung', 'Galaxy S23', '[{"storage": "128GB", "basePriceUSD": 350}, {"storage": "256GB", "basePriceUSD": 390}]'::jsonb, 22),
+('Samsung', 'Galaxy S22 Ultra', '[{"storage": "128GB", "basePriceUSD": 380}, {"storage": "256GB", "basePriceUSD": 420}]'::jsonb, 23)
+ON CONFLICT (brand, model) DO NOTHING;
+
+

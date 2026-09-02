@@ -247,8 +247,15 @@ export const DEFAULT_CONDITION_PENALTIES: ConditionPenalties = {
   boxCableBonusUSD: 15
 };
 
+let masterDevicesOverride: SupportedTradeInDevice[] | null = null;
+
+export function setMasterTradeInDevicesCache(devices: SupportedTradeInDevice[]) {
+  masterDevicesOverride = devices;
+}
+
 export function getTradeInDevices(customDevices?: SupportedTradeInDevice[]): SupportedTradeInDevice[] {
-  return customDevices && customDevices.length > 0 ? customDevices : SUPPORTED_TRADE_IN_DEVICES;
+  if (customDevices && customDevices.length > 0) return customDevices;
+  return masterDevicesOverride || SUPPORTED_TRADE_IN_DEVICES;
 }
 
 export function calculateTradeInValue(
