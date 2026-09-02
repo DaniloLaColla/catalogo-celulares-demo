@@ -26,13 +26,16 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 }) => {
   const isUsado = product.productType === 'Usado';
   const arsPrice = product.priceUSD * config.usdToArsRate;
+  const isLeather = config.customSettings?.aesthetic === 'leather-luxury';
 
   return (
     <div
-      className={`group relative rounded-3xl p-4 sm:p-5 liquid-glass flex flex-col justify-between overflow-hidden transition-all duration-200 hover:-translate-y-1 ${
-        isUsado 
-          ? 'hover:border-purple-500/50 hover:shadow-[0_12px_35px_rgba(168,85,247,0.15)]' 
-          : 'hover:border-white/40 hover:shadow-[0_12px_35px_rgba(255,255,255,0.1)]'
+      className={`group relative rounded-3xl p-4 sm:p-5 flex flex-col justify-between overflow-hidden transition-all duration-200 hover:-translate-y-1 ${
+        isLeather
+          ? 'bg-[#121216] border border-zinc-800/90 hover:border-zinc-500/60 shadow-[0_15px_35px_rgba(0,0,0,0.9)]'
+          : isUsado 
+            ? 'liquid-glass hover:border-purple-500/50 hover:shadow-[0_12px_35px_rgba(168,85,247,0.15)]' 
+            : 'liquid-glass hover:border-white/40 hover:shadow-[0_12px_35px_rgba(255,255,255,0.1)]'
       }`}
     >
       <div>
@@ -40,12 +43,20 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         <div className="flex items-center justify-between gap-1.5 mb-3">
           {/* Badge Sellado vs Usado con Batería */}
           {isUsado ? (
-            <div className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30 text-[11px] font-black tracking-wide">
-              <BatteryCharging size={13} className="text-purple-400" />
+            <div className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-black tracking-wide border ${
+              isLeather
+                ? 'bg-zinc-800/90 text-zinc-300 border-zinc-700/80'
+                : 'bg-purple-500/20 text-purple-300 border-purple-500/30'
+            }`}>
+              <BatteryCharging size={13} className={isLeather ? 'text-zinc-400' : 'text-purple-400'} />
               <span>Batería: {product.batteryPercentage || 90}%</span>
             </div>
           ) : (
-            <div className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/15 text-slate-100 border border-white/20 text-[11px] font-extrabold tracking-wide">
+            <div className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-extrabold tracking-wide border ${
+              isLeather
+                ? 'bg-white/10 text-white border-white/20'
+                : 'bg-white/15 text-slate-100 border-white/20'
+            }`}>
               <Box size={13} className="text-white" />
               <span>Sellado · Nuevo</span>
             </div>
@@ -54,7 +65,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           {/* Estado de Stock */}
           <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full border ${
             product.inStock 
-              ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30' 
+              ? isLeather ? 'bg-zinc-800/80 text-emerald-400 border-emerald-500/30' : 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30' 
               : 'bg-rose-500/15 text-rose-300 border-rose-500/30'
           }`}>
             {product.inStock ? 'Stock Inmediato' : 'Consultar'}
@@ -134,7 +145,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           <button
             type="button"
             onClick={() => onOpenCanje(product)}
-            className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-2xl bg-white/5 hover:bg-white/15 text-slate-200 border border-white/10 hover:border-white/20 text-xs font-bold transition-all active:scale-95"
+            className={`flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-2xl text-xs font-bold transition-all active:scale-95 ${
+              isLeather
+                ? 'bg-zinc-800/80 hover:bg-zinc-700 text-zinc-200 border border-zinc-700/70'
+                : 'bg-white/5 hover:bg-white/15 text-slate-200 border border-white/10 hover:border-white/20'
+            }`}
           >
             <ArrowRightLeft size={13} className="text-slate-300" />
             <span>Canjear</span>
@@ -144,10 +159,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           <button
             type="button"
             onClick={() => onQuickBuy(product)}
-            className="btn-liquid-whatsapp flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-2xl text-xs font-extrabold text-black active:scale-95 transition-all shadow-[0_0_15px_rgba(37,211,102,0.3)]"
+            className={`flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-2xl text-xs font-black active:scale-95 transition-all ${
+              isLeather
+                ? 'bg-emerald-500 hover:bg-emerald-400 text-black shadow-md'
+                : 'btn-liquid-whatsapp shadow-[0_0_15px_rgba(37,211,102,0.3)]'
+            }`}
           >
             <WhatsAppIcon size={15} className="text-black fill-black" />
-            <span>Consultar</span>
+            <span>Pedir</span>
           </button>
         </div>
       </div>

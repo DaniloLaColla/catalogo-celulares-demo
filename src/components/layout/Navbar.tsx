@@ -59,11 +59,11 @@ export const Navbar: React.FC<NavbarProps> = ({
             title="Ir al inicio del catálogo"
           >
             {config.logoUrl ? (
-              <div className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-2xl overflow-hidden bg-white/5 border border-white/15 flex items-center justify-center p-1 shadow-lg shrink-0">
+              <div className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-full overflow-hidden bg-black/60 border border-white/25 flex items-center justify-center p-0.5 shadow-lg shrink-0">
                 <img
                   src={config.logoUrl}
                   alt={config.storeName}
-                  className="max-h-full max-w-full object-contain"
+                  className="w-full h-full object-contain rounded-full"
                   onError={(e) => {
                     (e.target as HTMLElement).style.display = 'none';
                   }}

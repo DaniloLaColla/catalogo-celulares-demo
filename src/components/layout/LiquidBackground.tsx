@@ -7,17 +7,20 @@ export const LiquidBackground: React.FC<LiquidBackgroundProps> = ({ bgTexture, a
   const isLeather = aesthetic === 'leather-luxury' || Boolean(bgTexture);
 
   return (
-    <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10 bg-[#070709] will-change-transform">
-      {isLeather && bgTexture ? (
+    <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10 bg-[#08080A] will-change-transform">
+      {isLeather ? (
         <>
-          {/* Textura de Cuero Genuino Luxury */}
+          {/* Textura de Cuero Negro Genuino Tiled de Alta Calidad (Sin logos ni letras) */}
           <div 
-            className="absolute inset-0 bg-cover bg-center bg-fixed opacity-70"
-            style={{ backgroundImage: `url("${bgTexture}")` }}
+            className="absolute inset-0 bg-repeat opacity-[0.22]"
+            style={{ 
+              backgroundImage: `url("/tenants/istore-regina/pure-leather-black.jpg")`,
+              backgroundSize: '360px auto'
+            }}
           />
-          {/* Capas de atmósfera y viñeta elegante para legibilidad óptima */}
-          <div className="absolute inset-0 bg-gradient-to-b from-[#070709]/85 via-[#070709]/70 to-[#070709]/95" />
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_0%,rgba(255,255,255,0.06),transparent)]" />
+          {/* Iluminación de Estudio Apple Luxury (Viñeta suave) */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#08080A]/90 via-transparent to-[#08080A]/95" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_50%_at_50%_0%,rgba(255,255,255,0.05),transparent)]" />
         </>
       ) : (
         <>
