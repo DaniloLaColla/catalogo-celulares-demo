@@ -142,8 +142,11 @@ export function App() {
 
   return (
     <div className="relative min-h-screen pb-24 sm:pb-12 text-slate-100 flex flex-col justify-between">
-      {/* Fondo Liquid Glass */}
-      <LiquidBackground />
+      {/* Fondo Liquid Glass / Leather Luxury */}
+      <LiquidBackground 
+        bgTexture={config.customSettings?.bgTexture}
+        aesthetic={config.customSettings?.aesthetic}
+      />
 
       {/* Cabecera Principal */}
       <Navbar
@@ -158,7 +161,11 @@ export function App() {
       <main className="max-w-7xl mx-auto w-full px-2 sm:px-6 flex-1">
         {/* ─── HERO BANNER ─── */}
         <section className="px-3 pt-4 sm:pt-6 pb-2">
-          <div className="relative rounded-3xl p-5 sm:p-8 liquid-glass-elevated border border-white/20 overflow-hidden">
+          <div className={`relative rounded-3xl p-5 sm:p-8 overflow-hidden transition-all ${
+            config.customSettings?.aesthetic === 'leather-luxury'
+              ? 'bg-[#0E0E12]/80 border border-white/20 shadow-[0_25px_60px_rgba(0,0,0,0.9)] backdrop-blur-xl'
+              : 'liquid-glass-elevated border border-white/20'
+          }`}>
             <div className="absolute top-0 right-0 w-48 h-48 bg-gradient-to-bl from-white/10 to-transparent rounded-full blur-2xl pointer-events-none" />
             <div className="absolute -bottom-10 -left-10 w-48 h-48 bg-gradient-to-tr from-zinc-600/10 to-transparent rounded-full blur-2xl pointer-events-none" />
 
