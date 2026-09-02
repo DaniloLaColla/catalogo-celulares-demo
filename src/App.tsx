@@ -9,6 +9,7 @@ import {
   ChevronRight
 } from 'lucide-react';
 import { useCatalog } from './hooks/useCatalog';
+import { useTenant } from './hooks/useTenant';
 import { useWhatsAppCheckout } from './hooks/useWhatsAppCheckout';
 import { Product, CategoryType } from './types';
 
@@ -36,6 +37,8 @@ const CATEGORIES: CategoryType[] = [
 ];
 
 export function App() {
+  const { tenant } = useTenant();
+
   const {
     products,
     filteredProducts,
@@ -58,7 +61,7 @@ export function App() {
     deleteProduct,
     toggleStock,
     resetToDefault
-  } = useCatalog();
+  } = useCatalog(tenant);
 
   const { buyDirectProduct, buyWithPlanCanje, consultGeneralCanje } = useWhatsAppCheckout(config);
 

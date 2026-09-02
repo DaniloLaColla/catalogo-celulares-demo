@@ -18,6 +18,7 @@ export interface ProductColor {
 
 export interface Product {
   id: string;
+  tenantId?: string;
   name: string;
   category: CategoryType;
   brand: 'Apple' | 'Samsung' | 'Xiaomi' | 'Dell' | 'Lenovo' | 'ASUS' | 'Sony' | 'JBL' | 'Otro';
@@ -98,7 +99,17 @@ export interface CanjePricingConfig {
   penalties?: Partial<ConditionPenalties>;
 }
 
+export interface Tenant {
+  id: string;
+  slug: string;
+  name: string;
+  customDomain?: string;
+  isActive: boolean;
+  createdAt?: string;
+}
+
 export interface StoreConfig {
+  tenantId?: string;
   storeName: string;
   logoUrl?: string;
   whatsappNumber: string;
@@ -121,4 +132,5 @@ export interface StoreConfig {
   heroWarrantyNew?: string;
   heroWarrantyUsed?: string;
   showHeroCanjeBadge?: boolean;
+  customSettings?: Record<string, any>;
 }

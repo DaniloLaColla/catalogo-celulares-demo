@@ -1,8 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Product, CategoryType, StoreConfig } from '../types';
+import { Product, CategoryType, StoreConfig, Tenant } from '../types';
 import { INITIAL_PRODUCTS } from '../data/initialProducts';
 import { fetchLiveDollarBlue } from '../services/dollarService';
 import { supabase, isSupabaseConfigured } from '../services/supabaseClient';
+import { DEFAULT_TENANT } from '../services/tenantService';
 
 const DEFAULT_CONFIG: StoreConfig = {
   storeName: 'TestStore',
@@ -29,6 +30,7 @@ const DEFAULT_CONFIG: StoreConfig = {
 function mapDbToProduct(row: any): Product {
   return {
     id: row.id,
+    tenantId: row.tenant_id || undefined,
     name: row.name,
     category: row.category,
     brand: row.brand,
@@ -51,9 +53,10 @@ function mapDbToProduct(row: any): Product {
 }
 
 // Mapeo de TypeScript Product a Supabase snake_case
-function mapProductToDb(p: Product | Omit<Product, 'id'>, id?: string) {
+function mapProductToDb(p: Product | Omit<Product, 'id'>, id?: string, tenantId?: string) {
   return {
     id: id || (p as Product).id || `prod-${Date.now()}`,
+    tenant_id: (p as any).tenantId || tenantId || DEFAULT_TENANT.id,
     name: p.name,
     category: p.category,
     brand: p.brand,
@@ -79,6 +82,7 @@ function mapProductToDb(p: Product | Omit<Product, 'id'>, id?: string) {
 // Mapeo de Supabase snake_case a StoreConfig
 function mapDbToConfig(row: any): StoreConfig {
   return {
+    tenantId: row.tenant_id || undefined,
     storeName: row.store_name || DEFAULT_CONFIG.storeName,
     logoUrl: row.logo_url || '',
     whatsappNumber: row.whatsapp_number || DEFAULT_CONFIG.whatsappNumber,
@@ -99,14 +103,19 @@ function mapDbToConfig(row: any): StoreConfig {
     heroSubtitle: row.hero_subtitle || undefined,
     heroWarrantyNew: row.hero_warranty_new || undefined,
     heroWarrantyUsed: row.hero_warranty_used || undefined,
-    showHeroCanjeBadge: row.show_hero_canje_badge !== undefined ? Boolean(row.show_hero_canje_badge) : true
+    showHeroCanjeBadge: row.show_hero_canje_badge !== undefined ? Boolean(row.show_hero_canje_badge) : true,
+    customSettings: row.custom_settings || {}
   };
 }
 
 // Mapeo de StoreConfig a Supabase snake_case
-function mapConfigToDb(c: StoreConfig) {
+function mapConfigToDb(c: StoreConfig, tenantId?: string, configId?: string) {
+  const activeTenantId = c.tenantId || tenantId || DEFAULT_TENANT.id;
+  const activeConfigId = configId || (activeTenantId === DEFAULT_TENANT.id ? 'default' : `cfg-${activeTenantId}`);
+
   return {
-    id: 'default',
+    id: activeConfigId,
+    tenant_id: activeTenantId,
     store_name: c.storeName,
     logo_url: c.logoUrl || null,
     whatsapp_number: c.whatsappNumber,
@@ -128,13 +137,22 @@ function mapConfigToDb(c: StoreConfig) {
     hero_warranty_new: c.heroWarrantyNew || null,
     hero_warranty_used: c.heroWarrantyUsed || null,
     show_hero_canje_badge: c.showHeroCanjeBadge !== false,
+    custom_settings: c.customSettings || {},
     updated_at: new Date().toISOString()
   };
 }
 
-export function useCatalog() {
+export function useCatalog(currentTenant?: Tenant) {
+  const activeTenant = currentTenant || DEFAULT_TENANT;
+  const activeTenantId = activeTenant.id;
+  const isDemo = activeTenant.slug === 'demo';
+
   const [products, setProducts] = useState<Product[]>(INITIAL_PRODUCTS);
-  const [config, setConfig] = useState<StoreConfig>(DEFAULT_CONFIG);
+  const [config, setConfig] = useState<StoreConfig>({
+    ...DEFAULT_CONFIG,
+    storeName: activeTenant.name || DEFAULT_CONFIG.storeName,
+    tenantId: activeTenantId
+  });
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const [isUpdatingDollar, setIsUpdatingDollar] = useState(false);
@@ -158,32 +176,50 @@ export function useCatalog() {
         setIsLoading(true);
 
         // 1. Cargar Configuración de Tienda
-        const { data: configData, error: configError } = await supabase
-          .from('store_config')
-          .select('*')
-          .eq('id', 'default')
-          .single();
+        let configQuery = supabase.from('store_config').select('*');
+        if (isDemo) {
+          configQuery = configQuery.eq('id', 'default');
+        } else {
+          configQuery = configQuery.eq('tenant_id', activeTenantId);
+        }
+        const { data: configData, error: configError } = await configQuery.maybeSingle();
 
         if (configData && !configError) {
           setConfig(mapDbToConfig(configData));
-        } else if (configError && configError.code === 'PGRST116') {
-          // No existe registro default -> crearlo en Supabase
-          await supabase.from('store_config').upsert(mapConfigToDb(DEFAULT_CONFIG));
+        } else if (!configData) {
+          // Si no existe configuración previa para esta tienda, crear una inicial
+          const initialConfig: StoreConfig = {
+            ...DEFAULT_CONFIG,
+            storeName: activeTenant.name || DEFAULT_CONFIG.storeName,
+            tenantId: activeTenantId
+          };
+          await supabase.from('store_config').upsert(mapConfigToDb(initialConfig, activeTenantId));
+          setConfig(initialConfig);
         }
 
         // 2. Cargar Productos
-        const { data: prodsData, error: prodsError } = await supabase
+        let prodsQuery = supabase
           .from('products')
           .select('*')
           .order('created_at', { ascending: false });
 
+        if (!isDemo) {
+          prodsQuery = prodsQuery.eq('tenant_id', activeTenantId);
+        }
+
+        const { data: prodsData, error: prodsError } = await prodsQuery;
+
         if (prodsData && prodsData.length > 0) {
           setProducts(prodsData.map(mapDbToProduct));
         } else if (!prodsError && (!prodsData || prodsData.length === 0)) {
-          // Si la base de datos está vacía, sembrar los productos iniciales
-          const seedPayload = INITIAL_PRODUCTS.map((p) => mapProductToDb(p));
-          await supabase.from('products').upsert(seedPayload);
-          setProducts(INITIAL_PRODUCTS);
+          if (isDemo) {
+            // Si es demo y está vacía, sembrar los iniciales
+            const seedPayload = INITIAL_PRODUCTS.map((p) => mapProductToDb(p, undefined, activeTenantId));
+            await supabase.from('products').upsert(seedPayload);
+            setProducts(INITIAL_PRODUCTS);
+          } else {
+            setProducts([]);
+          }
         }
       } catch (err) {
         console.warn('Error al conectar con Supabase Cloud DB:', err);
@@ -193,23 +229,24 @@ export function useCatalog() {
     }
 
     loadCloudData();
-  }, []);
+  }, [activeTenantId, isDemo, activeTenant.name]);
 
   // ─── SUSCRIPCIÓN EN TIEMPO REAL (REALTIME SYNC) ───
   useEffect(() => {
     if (!isSupabaseConfigured) return;
 
-    // Canal en vivo para sincronizar productos entre todos los clientes
+    const channelName = `public:realtime_catalog_${activeTenant.slug}`;
     const channel = supabase
-      .channel('public:realtime_catalog')
+      .channel(channelName)
       .on(
         'postgres_changes',
         { event: '*', schema: 'public', table: 'products' },
         async () => {
-          const { data } = await supabase
-            .from('products')
-            .select('*')
-            .order('created_at', { ascending: false });
+          let q = supabase.from('products').select('*').order('created_at', { ascending: false });
+          if (!isDemo) {
+            q = q.eq('tenant_id', activeTenantId);
+          }
+          const { data } = await q;
           if (data) setProducts(data.map(mapDbToProduct));
         }
       )
@@ -217,11 +254,13 @@ export function useCatalog() {
         'postgres_changes',
         { event: '*', schema: 'public', table: 'store_config' },
         async () => {
-          const { data } = await supabase
-            .from('store_config')
-            .select('*')
-            .eq('id', 'default')
-            .single();
+          let q = supabase.from('store_config').select('*');
+          if (isDemo) {
+            q = q.eq('id', 'default');
+          } else {
+            q = q.eq('tenant_id', activeTenantId);
+          }
+          const { data } = await q.maybeSingle();
           if (data) setConfig(mapDbToConfig(data));
         }
       )
@@ -230,7 +269,7 @@ export function useCatalog() {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, []);
+  }, [activeTenantId, activeTenant.slug, isDemo]);
 
   // ─── ACTUALIZACIÓN DEL DÓLAR BLUE ───
   const refreshDollarRate = useCallback(async () => {
@@ -307,6 +346,7 @@ export function useCatalog() {
     const productWithId: Product = {
       ...newProduct,
       id,
+      tenantId: (newProduct as any).tenantId || activeTenantId,
       warranty: newProduct.warranty || warranty
     };
 
@@ -314,18 +354,22 @@ export function useCatalog() {
     setProducts((prev) => [productWithId, ...prev]);
 
     if (isSupabaseConfigured) {
-      await supabase.from('products').insert(mapProductToDb(productWithId, id));
+      await supabase.from('products').insert(mapProductToDb(productWithId, id, activeTenantId));
     }
     return productWithId;
   };
 
   const updateProduct = async (updated: Product) => {
-    setProducts((prev) => prev.map((p) => (p.id === updated.id ? updated : p)));
+    const updatedWithTenant: Product = {
+      ...updated,
+      tenantId: updated.tenantId || activeTenantId
+    };
+    setProducts((prev) => prev.map((p) => (p.id === updated.id ? updatedWithTenant : p)));
 
     if (isSupabaseConfigured) {
       await supabase
         .from('products')
-        .update(mapProductToDb(updated, updated.id))
+        .update(mapProductToDb(updatedWithTenant, updated.id, activeTenantId))
         .eq('id', updated.id);
     }
   };
@@ -356,21 +400,23 @@ export function useCatalog() {
   };
 
   const updateConfig = async (newConfig: StoreConfig) => {
-    setConfig(newConfig);
+    const configWithTenant = { ...newConfig, tenantId: activeTenantId };
+    setConfig(configWithTenant);
 
     if (isSupabaseConfigured) {
-      await supabase.from('store_config').upsert(mapConfigToDb(newConfig));
+      await supabase.from('store_config').upsert(mapConfigToDb(configWithTenant, activeTenantId));
     }
   };
 
   const resetToDefault = async () => {
     setProducts(INITIAL_PRODUCTS);
-    setConfig(DEFAULT_CONFIG);
+    const initialConfig = { ...DEFAULT_CONFIG, tenantId: activeTenantId };
+    setConfig(initialConfig);
 
-    if (isSupabaseConfigured) {
-      await supabase.from('products').delete().neq('id', 'keep_all');
-      await supabase.from('products').upsert(INITIAL_PRODUCTS.map((p) => mapProductToDb(p)));
-      await supabase.from('store_config').upsert(mapConfigToDb(DEFAULT_CONFIG));
+    if (isSupabaseConfigured && isDemo) {
+      await supabase.from('products').delete().or(`tenant_id.eq.${activeTenantId},tenant_id.is.null`);
+      await supabase.from('products').upsert(INITIAL_PRODUCTS.map((p) => mapProductToDb(p, undefined, activeTenantId)));
+      await supabase.from('store_config').upsert(mapConfigToDb(initialConfig, activeTenantId));
     }
   };
 
