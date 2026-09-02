@@ -134,3 +134,24 @@ export interface StoreConfig {
   showHeroCanjeBadge?: boolean;
   customSettings?: Record<string, any>;
 }
+
+export interface QuotationLead {
+  id?: string;
+  tenantId?: string;
+  tradeInModel: string;
+  tradeInStorage: string;
+  batteryPercentage?: number | null;
+  screenStatus?: string;
+  bodyStatus?: string;
+  faceIdWorking?: boolean;
+  hasBoxCable?: boolean;
+  estimatedValueUSD: number;
+  targetProductId?: string;
+  targetProductName?: string;
+  differenceToPayUSD?: number;
+  usdToArsRate?: number;
+  differenceToPayARS?: number;
+  status?: 'quoted' | 'whatsapp_sent';
+  createdAt?: string;
+}
+

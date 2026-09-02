@@ -49,10 +49,16 @@ import {
   KeyRound,
   Save,
   Type,
-  ShieldCheck
+  ShieldCheck,
+  TrendingUp,
+  UserCheck,
+  Clock,
+  ExternalLink
 } from 'lucide-react';
-import { Product, StoreConfig, CategoryType, ProductColor, SupportedTradeInDevice, ConditionPenalties } from '../../types';
+import { Product, StoreConfig, CategoryType, ProductColor, SupportedTradeInDevice, ConditionPenalties, QuotationLead } from '../../types';
 import { AppleLogo } from '../ui/AppleLogo';
+import { getQuotationsByTenant } from '../../services/quotationService';
+import { DEFAULT_TENANT } from '../../services/tenantService';
 import { scrapePhotosFromLink } from '../../services/socialScraperService';
 import { SUPPORTED_TRADE_IN_DEVICES, DEFAULT_CONDITION_PENALTIES } from '../../data/canjeValuation';
 
@@ -300,7 +306,28 @@ export const AdminDrawer: React.FC<AdminDrawerProps> = ({
   const [enteredPin, setEnteredPin] = useState('');
   const [pinError, setPinError] = useState(false);
 
-  const [activeTab, setActiveTab] = useState<'products' | 'config' | 'bot'>('products');
+  const [activeTab, setActiveTab] = useState<'products' | 'config' | 'leads' | 'bot'>('products');
+  const [leads, setLeads] = useState<QuotationLead[]>([]);
+  const [isLoadingLeads, setIsLoadingLeads] = useState(false);
+
+  const loadLeads = async () => {
+    setIsLoadingLeads(true);
+    try {
+      const activeTenantId = config.tenantId || DEFAULT_TENANT.id;
+      const data = await getQuotationsByTenant(activeTenantId);
+      setLeads(data);
+    } catch (e) {
+      console.warn('Error cargando leads:', e);
+    } finally {
+      setIsLoadingLeads(false);
+    }
+  };
+
+  useEffect(() => {
+    if (activeTab === 'leads' && isAuthenticated) {
+      loadLeads();
+    }
+  }, [activeTab, isAuthenticated, config.tenantId]);
   const [isAddingProduct, setIsAddingProduct] = useState(false);
   const [editingProductId, setEditingProductId] = useState<string | null>(null);
 
@@ -1130,13 +1157,13 @@ export const AdminDrawer: React.FC<AdminDrawerProps> = ({
               /* VISTA PRINCIPAL DEL PANEL AUTENTICADO */
               <div>
                 {/* Tabs */}
-                <div className="flex items-center gap-2 mb-6 p-1 rounded-2xl bg-white/5 border border-white/10">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 mb-6 p-1 rounded-2xl bg-white/5 border border-white/10">
                   <button
                     onClick={() => {
                       setActiveTab('products');
                       handleCancelForm();
                     }}
-                    className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all ${
+                    className={`py-2 px-1 rounded-xl text-xs font-bold transition-all text-center truncate ${
                       activeTab === 'products' ? 'bg-white text-black shadow-md' : 'text-slate-400 hover:text-white'
                     }`}
                   >
@@ -1144,19 +1171,33 @@ export const AdminDrawer: React.FC<AdminDrawerProps> = ({
                   </button>
                   <button
                     onClick={() => setActiveTab('config')}
-                    className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all ${
+                    className={`py-2 px-1 rounded-xl text-xs font-bold transition-all text-center truncate ${
                       activeTab === 'config' ? 'bg-white text-black shadow-md' : 'text-slate-400 hover:text-white'
                     }`}
                   >
-                    Canje, Logo & Dólar
+                    Canje & Dólar
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('leads')}
+                    className={`py-2 px-1 rounded-xl text-xs font-bold transition-all text-center truncate flex items-center justify-center gap-1.5 ${
+                      activeTab === 'leads' ? 'bg-emerald-500 text-black font-black shadow-md' : 'text-emerald-400 hover:text-white'
+                    }`}
+                  >
+                    <TrendingUp size={13} className="shrink-0" />
+                    <span>Cotizaciones</span>
+                    {leads.length > 0 && (
+                      <span className={`text-[10px] px-1 rounded-full ${activeTab === 'leads' ? 'bg-black text-emerald-400' : 'bg-emerald-500/20 text-emerald-300'}`}>
+                        {leads.length}
+                      </span>
+                    )}
                   </button>
                   <button
                     onClick={() => setActiveTab('bot')}
-                    className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all ${
+                    className={`py-2 px-1 rounded-xl text-xs font-bold transition-all text-center truncate ${
                       activeTab === 'bot' ? 'bg-white text-black shadow-md' : 'text-slate-400 hover:text-white'
                     }`}
                   >
-                    Bots (Próximamente)
+                    Bots WhatsApp
                   </button>
                 </div>
 
@@ -2942,7 +2983,164 @@ export const AdminDrawer: React.FC<AdminDrawerProps> = ({
                   </div>
                 )}
 
-                {/* ─── TAB 3: BOTS (PRÓXIMAMENTE) ─── */}
+                {/* ─── TAB 3: COTIZACIONES / LEADS CRM ─── */}
+                {activeTab === 'leads' && (
+                  <div className="space-y-4 text-xs text-slate-300 py-2">
+                    {/* Tarjeta de Métricas y Resumen */}
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                      <div className="p-3 rounded-2xl bg-white/5 border border-white/10 space-y-1">
+                        <span className="text-[10px] text-slate-400 font-semibold flex items-center gap-1">
+                          <TrendingUp size={12} className="text-emerald-400" />
+                          Total Cotizados
+                        </span>
+                        <p className="text-lg font-black text-white">{leads.length}</p>
+                      </div>
+
+                      <div className="p-3 rounded-2xl bg-emerald-950/20 border border-emerald-500/30 space-y-1">
+                        <span className="text-[10px] text-emerald-300 font-semibold flex items-center gap-1">
+                          <MessageSquare size={12} className="text-emerald-400" />
+                          Enviados a WhatsApp
+                        </span>
+                        <p className="text-lg font-black text-emerald-400">
+                          {leads.filter((l) => l.status === 'whatsapp_sent').length}
+                        </p>
+                      </div>
+
+                      <div className="col-span-2 sm:col-span-1 p-3 rounded-2xl bg-white/5 border border-white/10 space-y-1">
+                        <span className="text-[10px] text-slate-400 font-semibold flex items-center gap-1">
+                          <DollarSign size={12} className="text-cyan-400" />
+                          Pipeline en Toma
+                        </span>
+                        <p className="text-lg font-black text-cyan-300">
+                          ${leads.reduce((acc, l) => acc + (l.estimatedValueUSD || 0), 0).toLocaleString('en-US')} USD
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Botón de Refrescar Leads */}
+                    <div className="flex items-center justify-between pt-1">
+                      <h4 className="text-xs font-bold text-white flex items-center gap-1.5">
+                        <Smartphone size={14} className="text-emerald-400" />
+                        Historial de Cotizaciones Recientes
+                      </h4>
+                      <button
+                        type="button"
+                        onClick={loadLeads}
+                        disabled={isLoadingLeads}
+                        className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-[11px] text-slate-300 hover:text-white transition-all"
+                      >
+                        <RefreshCw size={12} className={isLoadingLeads ? 'animate-spin' : ''} />
+                        <span>Actualizar</span>
+                      </button>
+                    </div>
+
+                    {/* Lista de Leads */}
+                    {isLoadingLeads ? (
+                      <div className="py-12 text-center text-slate-400 space-y-2">
+                        <RefreshCw size={20} className="animate-spin mx-auto text-emerald-400" />
+                        <p className="text-xs">Cargando cotizaciones...</p>
+                      </div>
+                    ) : leads.length === 0 ? (
+                      <div className="py-12 px-6 rounded-3xl bg-white/[0.02] border border-white/10 text-center space-y-3">
+                        <div className="w-12 h-12 mx-auto rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
+                          <TrendingUp size={24} />
+                        </div>
+                        <h5 className="text-sm font-bold text-white">No hay cotizaciones registradas aún</h5>
+                        <p className="text-xs text-slate-400 max-w-sm mx-auto leading-relaxed">
+                          Cuando tus clientes usen el cotizador de Plan Canje en la web, acá vas a ver cada cálculo con el equipo que entregan, la batería, la valuación de toma y si te contactaron por WhatsApp.
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="space-y-2.5 max-h-[500px] overflow-y-auto no-scrollbar pr-1">
+                        {leads.map((lead, idx) => {
+                          const isSent = lead.status === 'whatsapp_sent';
+                          const dateFormatted = lead.createdAt
+                            ? new Date(lead.createdAt).toLocaleDateString('es-AR', {
+                                day: '2-digit',
+                                month: '2-digit',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                              })
+                            : 'Reciente';
+
+                          return (
+                            <div
+                              key={lead.id || idx}
+                              className={`p-3.5 rounded-2xl border transition-all space-y-2.5 ${
+                                isSent
+                                  ? 'bg-emerald-950/15 border-emerald-500/30 hover:border-emerald-400/50'
+                                  : 'bg-white/[0.03] border-white/10 hover:border-white/20'
+                              }`}
+                            >
+                              {/* Header del lead */}
+                              <div className="flex items-center justify-between gap-2">
+                                <div className="flex items-center gap-1.5">
+                                  <Clock size={12} className="text-slate-500" />
+                                  <span className="text-[10px] text-slate-400 font-mono">{dateFormatted}</span>
+                                </div>
+                                <span
+                                  className={`text-[9px] font-black px-2 py-0.5 rounded-full border flex items-center gap-1 ${
+                                    isSent
+                                      ? 'bg-emerald-500/20 text-emerald-300 border-emerald-400/40'
+                                      : 'bg-cyan-500/10 text-cyan-300 border-cyan-400/30'
+                                  }`}
+                                >
+                                  {isSent ? '💬 Contactó por WhatsApp' : '👁️ Cotizó en Web'}
+                                </span>
+                              </div>
+
+                              {/* Detalles del Canje */}
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                                <div className="p-2.5 rounded-xl bg-black/40 border border-white/5 space-y-1">
+                                  <span className="text-[10px] uppercase tracking-wider text-slate-400 font-bold">
+                                    Entrega el cliente:
+                                  </span>
+                                  <p className="text-xs font-black text-white flex items-center gap-1.5">
+                                    <Smartphone size={13} className="text-purple-400" />
+                                    {lead.tradeInModel} ({lead.tradeInStorage})
+                                  </p>
+                                  <div className="flex items-center gap-2 text-[10px] text-slate-400 flex-wrap">
+                                    <span>🔋 {lead.batteryPercentage ? `${lead.batteryPercentage}%` : 'A verificar'}</span>
+                                    <span>· Pantalla: {lead.screenStatus}</span>
+                                    <span>· Chasis: {lead.bodyStatus}</span>
+                                  </div>
+                                  <p className="text-xs font-bold text-emerald-400 pt-0.5">
+                                    Valuación de toma: ${lead.estimatedValueUSD} USD
+                                  </p>
+                                </div>
+
+                                <div className="p-2.5 rounded-xl bg-black/40 border border-white/5 space-y-1">
+                                  <span className="text-[10px] uppercase tracking-wider text-slate-400 font-bold">
+                                    Quiere comprar:
+                                  </span>
+                                  <p className="text-xs font-black text-white flex items-center gap-1.5">
+                                    <Sparkles size={13} className="text-cyan-400" />
+                                    {lead.targetProductName || 'Consulta general de canje'}
+                                  </p>
+                                  {lead.differenceToPayUSD !== undefined && lead.differenceToPayUSD > 0 && (
+                                    <div className="pt-1">
+                                      <p className="text-[10px] text-slate-400">Diferencia a abonar:</p>
+                                      <p className="text-xs font-black text-cyan-300">
+                                        ${lead.differenceToPayUSD} USD
+                                        {lead.differenceToPayARS && (
+                                          <span className="text-[10px] text-slate-400 font-normal ml-1">
+                                            (~${lead.differenceToPayARS.toLocaleString('es-AR')} ARS)
+                                          </span>
+                                        )}
+                                      </p>
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* ─── TAB 4: BOTS (PRÓXIMAMENTE) ─── */}
                 {activeTab === 'bot' && (
                   <div className="space-y-4 text-xs text-slate-300 py-4">
                     <div className="p-6 rounded-3xl bg-gradient-to-b from-purple-950/40 via-white/[0.02] to-transparent border border-purple-500/30 text-center space-y-4 shadow-[0_0_30px_rgba(168,85,247,0.15)]">

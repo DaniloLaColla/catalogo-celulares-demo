@@ -66,3 +66,50 @@ ADD COLUMN IF NOT EXISTS custom_settings JSONB DEFAULT '{}'::jsonb;
 UPDATE public.store_config 
 SET tenant_id = '00000000-0000-0000-0000-000000000001'
 WHERE id = 'default' AND tenant_id IS NULL;
+
+-- 6. Crear tabla de cotizaciones e historial de leads (Quotations / Leads CRM)
+CREATE TABLE IF NOT EXISTS public.quotations (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    tenant_id UUID REFERENCES public.tenants(id) ON DELETE CASCADE,
+    trade_in_model TEXT NOT NULL,
+    trade_in_storage TEXT NOT NULL,
+    battery_percentage INTEGER,
+    screen_status TEXT,
+    body_status TEXT,
+    face_id_working BOOLEAN,
+    has_box_cable BOOLEAN,
+    estimated_value_usd NUMERIC NOT NULL,
+    target_product_id TEXT,
+    target_product_name TEXT,
+    difference_to_pay_usd NUMERIC,
+    usd_to_ars_rate NUMERIC,
+    difference_to_pay_ars NUMERIC,
+    status TEXT DEFAULT 'quoted', -- 'quoted' (calculado en web) | 'whatsapp_sent' (enviado por chat)
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE public.quotations ENABLE ROW LEVEL SECURITY;
+
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_policies WHERE tablename = 'quotations' AND policyname = 'Allow public insert on quotations'
+    ) THEN
+        CREATE POLICY "Allow public insert on quotations" ON public.quotations FOR INSERT WITH CHECK (true);
+    END IF;
+
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_policies WHERE tablename = 'quotations' AND policyname = 'Allow public read on quotations'
+    ) THEN
+        CREATE POLICY "Allow public read on quotations" ON public.quotations FOR SELECT USING (true);
+    END IF;
+
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_policies WHERE tablename = 'quotations' AND policyname = 'Allow public update on quotations'
+    ) THEN
+        CREATE POLICY "Allow public update on quotations" ON public.quotations FOR UPDATE USING (true);
+    END IF;
+END $$;
+
+CREATE INDEX IF NOT EXISTS idx_quotations_tenant ON public.quotations(tenant_id);
+

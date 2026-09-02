@@ -19,6 +19,7 @@ import { Product, StoreConfig } from '../../types';
 import { useCanje } from '../../hooks/useCanje';
 import { SUPPORTED_TRADE_IN_DEVICES } from '../../data/canjeValuation';
 import { WhatsAppIcon } from '../ui/WhatsAppIcon';
+import { saveQuotation, markQuotationWhatsAppSent } from '../../services/quotationService';
 
 interface CanjeCalculatorModalProps {
   isOpen: boolean;
@@ -68,8 +69,30 @@ export const CanjeCalculatorModal: React.FC<CanjeCalculatorModalProps> = ({
     }
   }, [isOpen, initialTarget, setTargetProduct]);
 
+  const [savedQuotationId, setSavedQuotationId] = useState<string | null>(null);
+
   useEffect(() => {
-    if (step === 3 && isOpen && !isCalculating) {
+    if (step === 3 && isOpen && !isCalculating && evaluation) {
+      saveQuotation({
+        tenantId: config.tenantId,
+        tradeInModel: tradeInState.model,
+        tradeInStorage: tradeInState.storage,
+        batteryPercentage: tradeInState.batteryPercentage,
+        screenStatus: tradeInState.screenStatus,
+        bodyStatus: tradeInState.bodyStatus,
+        faceIdWorking: tradeInState.faceIdWorking,
+        hasBoxCable: tradeInState.hasBoxAndCable,
+        estimatedValueUSD: evaluation.estimatedValueUSD,
+        targetProductId: targetProduct?.id,
+        targetProductName: targetProduct?.name,
+        differenceToPayUSD: evaluation.differenceToPayUSD,
+        usdToArsRate: config.usdToArsRate,
+        differenceToPayARS: Math.round(evaluation.differenceToPayUSD * config.usdToArsRate),
+        status: 'quoted'
+      }).then((id) => {
+        if (id) setSavedQuotationId(id);
+      });
+
       try {
         confetti({
           particleCount: 70,
@@ -81,7 +104,7 @@ export const CanjeCalculatorModal: React.FC<CanjeCalculatorModalProps> = ({
         // Fallback
       }
     }
-  }, [step, isOpen, isCalculating]);
+  }, [step, isOpen, isCalculating, evaluation?.estimatedValueUSD, targetProduct?.id]);
 
   if (!isOpen) return null;
 
@@ -751,7 +774,10 @@ export const CanjeCalculatorModal: React.FC<CanjeCalculatorModalProps> = ({
                 {targetProduct ? (
                   <button
                     type="button"
-                    onClick={() => onCanjeWhatsApp(evaluation, targetProduct, tradeInState)}
+                    onClick={() => {
+                      if (savedQuotationId) markQuotationWhatsAppSent(savedQuotationId);
+                      onCanjeWhatsApp(evaluation, targetProduct, tradeInState);
+                    }}
                     className="w-full btn-liquid-whatsapp flex items-center justify-center gap-2 py-3.5 px-4 rounded-2xl text-xs sm:text-sm font-black text-black shadow-[0_0_20px_rgba(37,211,102,0.4)] hover:shadow-[0_0_30px_rgba(37,211,102,0.6)] active:scale-95 transition-all text-center"
                   >
                     <WhatsAppIcon size={18} className="text-black fill-black shrink-0" />
@@ -760,8 +786,11 @@ export const CanjeCalculatorModal: React.FC<CanjeCalculatorModalProps> = ({
                 ) : (
                   <button
                     type="button"
-                    onClick={() => onConsultGeneralCanje(evaluation, tradeInState)}
-                    className="w-full btn-liquid-whatsapp flex items-center justify-center gap-2 py-3.5 px-4 rounded-2xl text-xs sm:text-sm font-black text-black shadow-[0_0_20px_rgba(37,211,102,0.4)] active:scale-95 transition-all text-center"
+                    onClick={() => {
+                      if (savedQuotationId) markQuotationWhatsAppSent(savedQuotationId);
+                      onConsultGeneralCanje(evaluation, tradeInState);
+                    }}
+                    className="w-full btn-liquid-whatsapp flex items-center justify-center gap-2 py-3.5 px-4 rounded-2xl text-xs sm:text-sm font-black text-black shadow-[0_0_20px_rgba(37,211,102,0.4)] hover:shadow-[0_0_30px_rgba(37,211,102,0.6)] active:scale-95 transition-all text-center"
                   >
                     <WhatsAppIcon size={18} className="text-black fill-black shrink-0" />
                     <span>Consultar Cotización por WhatsApp</span>
