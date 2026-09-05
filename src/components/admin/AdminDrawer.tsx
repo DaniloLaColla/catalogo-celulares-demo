@@ -2883,7 +2883,7 @@ export const AdminDrawer: React.FC<AdminDrawerProps> = ({
                       <div>
                         <label className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1 mb-1">
                           <Phone size={14} className="text-emerald-400" />
-                          WhatsApp Pedidos
+                          WhatsApp de Contacto
                         </label>
                         <input
                           type="text"

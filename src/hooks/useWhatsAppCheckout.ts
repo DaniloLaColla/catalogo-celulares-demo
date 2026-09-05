@@ -34,7 +34,7 @@ export function useWhatsAppCheckout(config: StoreConfig) {
     const message = 
 `⚡ *CONSULTA DE DISPONIBILIDAD | ${config.storeName}* ⚡
 
-¡Hola! Quería consultar disponibilidad para coordinar este equipo:
+¡Hola! Me interesa este equipo y quería consultarles disponibilidad:
 
 📱 *Producto:* ${product.name} (${product.productType.toUpperCase()})
 💾 *Capacidad:* ${storage}
@@ -42,12 +42,12 @@ export function useWhatsAppCheckout(config: StoreConfig) {
 ${batteryText}
 🛡️ *Garantía:* ${product.warranty}
 
-💵 *Precio Final:* $${product.priceUSD} USD${arsTotal}
+💵 *Precio:* $${product.priceUSD} USD${arsTotal}
 ${config.showArsPrice ? '\nℹ️ _El importe en ARS es estimativo y se calcula al valor del Dólar Blue al momento del pago._\n' : ''}
-📍 *Punto de Retiro / Entrega:*
+📍 *Puntos de Entrega:*
 ${deliveryOptions}
 
-¿Tienen disponibilidad para coordinar hoy mismo?`;
+¿Sigue disponible? Me gustaría conocer más detalles.`;
 
     const encoded = encodeURIComponent(message);
     const url = `https://wa.me/${phone}?text=${encoded}`;

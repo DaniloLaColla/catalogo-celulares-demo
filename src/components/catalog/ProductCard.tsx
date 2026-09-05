@@ -165,8 +165,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                 : 'btn-liquid-whatsapp shadow-[0_0_15px_rgba(37,211,102,0.3)]'
             }`}
           >
-            <WhatsAppIcon size={15} className="text-black fill-black" />
-            <span>Pedir</span>
+            <WhatsAppIcon size={15} className="text-black fill-black shrink-0" />
+            <span className="truncate">Me interesa</span>
           </button>
         </div>
       </div>
