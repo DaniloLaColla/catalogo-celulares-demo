@@ -12,10 +12,10 @@ export const LiquidBackground: React.FC<LiquidBackgroundProps> = ({ bgTexture, a
         <>
           {/* Textura de cuero negro genuino homogénea y continua (Cero cortes ni franjas) */}
           <div 
-            className="absolute inset-0 bg-repeat opacity-30"
+            className="absolute inset-0 bg-repeat opacity-40"
             style={{ 
               backgroundImage: `url("/tenants/istore-regina/seamless-leather.jpg")`,
-              backgroundSize: '260px 260px'
+              backgroundSize: '300px 160px'
             }}
           />
           {/* Sombreado homogéneo para contraste y legibilidad óptima */}
