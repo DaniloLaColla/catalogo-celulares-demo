@@ -293,14 +293,21 @@ export function useCatalog(currentTenant?: Tenant) {
 
       if (isSupabaseConfigured) {
         // Actualizar SOLO las columnas de cotización del dólar en Supabase sin tocar store_name ni otros datos
-        await supabase
+        let configUpdate = supabase
           .from('store_config')
           .update({
             usd_to_ars_rate: finalVenta,
             last_dollar_fetch_time: timeStr,
             updated_at: new Date().toISOString()
-          })
-          .eq('id', 'default');
+          });
+
+        if (isDemo) {
+          configUpdate = configUpdate.eq('id', 'default');
+        } else {
+          configUpdate = configUpdate.eq('tenant_id', activeTenantId);
+        }
+
+        await configUpdate;
       }
     } catch (err) {
       console.warn('Error al actualizar dólar automático:', err);
@@ -308,7 +315,7 @@ export function useCatalog(currentTenant?: Tenant) {
     } finally {
       setIsUpdatingDollar(false);
     }
-  }, [config.dollarSpreadUSD]);
+  }, [config.dollarSpreadUSD, activeTenantId, isDemo]);
 
   useEffect(() => {
     if (config.autoDollarUpdate) {
