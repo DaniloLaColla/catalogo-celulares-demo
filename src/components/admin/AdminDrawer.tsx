@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   X, 
@@ -328,6 +328,35 @@ export const AdminDrawer: React.FC<AdminDrawerProps> = ({
       loadLeads();
     }
   }, [activeTab, isAuthenticated, config.tenantId]);
+
+  // Métricas calculadas para la pestaña de Cotizaciones / Leads CRM
+  const leadMetrics = useMemo(() => {
+    const total = leads.length;
+    const sent = leads.filter((l) => l.status === 'whatsapp_sent').length;
+    const conversion = total > 0 ? Math.round((sent / total) * 100) : 0;
+
+    const modelStats = leads.reduce((acc: Record<string, number>, lead) => {
+      if (lead.tradeInModel) {
+        acc[lead.tradeInModel] = (acc[lead.tradeInModel] || 0) + 1;
+      }
+      return acc;
+    }, {});
+
+    const sortedModels = Object.entries(modelStats).sort((a, b) => b[1] - a[1]);
+    const topModelName = sortedModels.length > 0 ? sortedModels[0][0] : 'Sin datos';
+    const topModelCount = sortedModels.length > 0 ? sortedModels[0][1] : 0;
+    const topModelPercentage = total > 0 && topModelCount > 0 ? Math.round((topModelCount / total) * 100) : 0;
+
+    return {
+      total,
+      sent,
+      conversion,
+      topModelName,
+      topModelCount,
+      topModelPercentage
+    };
+  }, [leads]);
+
   const [isAddingProduct, setIsAddingProduct] = useState(false);
   const [editingProductId, setEditingProductId] = useState<string | null>(null);
 
@@ -2988,31 +3017,48 @@ export const AdminDrawer: React.FC<AdminDrawerProps> = ({
                   <div className="space-y-4 text-xs text-slate-300 py-2">
                     {/* Tarjeta de Métricas y Resumen */}
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                      {/* 1. Total Cotizados */}
                       <div className="p-3 rounded-2xl bg-white/5 border border-white/10 space-y-1">
                         <span className="text-[10px] text-slate-400 font-semibold flex items-center gap-1">
-                          <TrendingUp size={12} className="text-emerald-400" />
+                          <TrendingUp size={12} className="text-slate-400" />
                           Total Cotizados
                         </span>
-                        <p className="text-lg font-black text-white">{leads.length}</p>
+                        <p className="text-lg font-black text-white">{leadMetrics.total}</p>
+                        <p className="text-[10px] text-slate-500 font-medium">Interesados en Plan Canje</p>
                       </div>
 
+                      {/* 2. Contactos a WhatsApp & Conversión */}
                       <div className="p-3 rounded-2xl bg-emerald-950/20 border border-emerald-500/30 space-y-1">
-                        <span className="text-[10px] text-emerald-300 font-semibold flex items-center gap-1">
-                          <MessageSquare size={12} className="text-emerald-400" />
-                          Enviados a WhatsApp
-                        </span>
+                        <div className="flex items-center justify-between gap-1">
+                          <span className="text-[10px] text-emerald-300 font-semibold flex items-center gap-1">
+                            <MessageSquare size={12} className="text-emerald-400" />
+                            Contactos WhatsApp
+                          </span>
+                          {leadMetrics.total > 0 && (
+                            <span className="text-[9px] font-black px-1.5 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                              {leadMetrics.conversion}% conv.
+                            </span>
+                          )}
+                        </div>
                         <p className="text-lg font-black text-emerald-400">
-                          {leads.filter((l) => l.status === 'whatsapp_sent').length}
+                          {leadMetrics.sent}
                         </p>
+                        <p className="text-[10px] text-emerald-300/70 font-medium">Leads que te escribieron</p>
                       </div>
 
+                      {/* 3. Modelo Más Ofrecido en Toma (Opción 4) */}
                       <div className="col-span-2 sm:col-span-1 p-3 rounded-2xl bg-white/5 border border-white/10 space-y-1">
                         <span className="text-[10px] text-slate-400 font-semibold flex items-center gap-1">
-                          <DollarSign size={12} className="text-cyan-400" />
-                          Pipeline en Toma
+                          <Smartphone size={12} className="text-amber-400" />
+                          Más Ofrecido en Toma
                         </span>
-                        <p className="text-lg font-black text-cyan-300">
-                          ${leads.reduce((acc, l) => acc + (l.estimatedValueUSD || 0), 0).toLocaleString('en-US')} USD
+                        <p className="text-lg font-black text-amber-300 truncate" title={leadMetrics.topModelName}>
+                          {leadMetrics.topModelName}
+                        </p>
+                        <p className="text-[10px] text-slate-400 font-medium truncate">
+                          {leadMetrics.topModelCount > 0
+                            ? `${leadMetrics.topModelCount} cotizaciones (${leadMetrics.topModelPercentage}%)`
+                            : 'Al recibir cotizaciones'}
                         </p>
                       </div>
                     </div>
