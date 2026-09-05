@@ -65,9 +65,10 @@ export const CanjeCalculatorModal: React.FC<CanjeCalculatorModalProps> = ({
 
   useEffect(() => {
     if (isOpen) {
+      setStep(1);
       setTargetProduct(initialTarget || null);
     }
-  }, [isOpen, initialTarget, setTargetProduct]);
+  }, [isOpen, initialTarget, setTargetProduct, setStep]);
 
   const [savedQuotationId, setSavedQuotationId] = useState<string | null>(null);
 
@@ -110,6 +111,7 @@ export const CanjeCalculatorModal: React.FC<CanjeCalculatorModalProps> = ({
 
   const brands = Array.from(new Set(SUPPORTED_TRADE_IN_DEVICES.map((d) => d.brand)));
   const isManualMode = config.canjeMode === 'manual';
+  const isLeather = config.customSettings?.aesthetic === 'leather-luxury';
 
   const handleStartCalculation = () => {
     setIsCalculating(true);
@@ -159,7 +161,7 @@ export const CanjeCalculatorModal: React.FC<CanjeCalculatorModalProps> = ({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
-          className="fixed inset-0 bg-black/85 backdrop-blur-xl"
+          className="fixed inset-0 bg-black/80 backdrop-blur-xl"
         />
 
         {/* Modal Window */}
@@ -169,21 +171,24 @@ export const CanjeCalculatorModal: React.FC<CanjeCalculatorModalProps> = ({
           exit={{ opacity: 0, scale: 0.95, y: 15 }}
           transition={{ type: 'spring', stiffness: 320, damping: 28 }}
           className={`relative w-full max-w-xl sm:max-w-2xl max-h-[92vh] overflow-y-auto no-scrollbar rounded-2xl sm:rounded-3xl p-4 sm:p-7 z-10 my-auto text-slate-100 shadow-[0_25px_60px_rgba(0,0,0,0.95)] ${
-            config.customSettings?.aesthetic === 'leather-luxury'
-              ? 'bg-[#101014] border border-zinc-700/80'
+            isLeather
+              ? 'bg-[#121216] border border-zinc-700/80'
               : 'bg-[#0A0A0E] border border-white/20'
           }`}
         >
-          {/* Textura de cuero genuino palpable dentro del modal de canje */}
-          {config.customSettings?.aesthetic === 'leather-luxury' && (
+          {/* Textura de cuero genuino en capa z-0 para nunca tapar el contenido */}
+          {isLeather && (
             <div 
-              className="absolute inset-0 rounded-2xl sm:rounded-3xl bg-repeat opacity-60 pointer-events-none z-0"
+              className="absolute inset-0 rounded-2xl sm:rounded-3xl bg-repeat opacity-40 pointer-events-none z-0"
               style={{ 
                 backgroundImage: `url("/tenants/istore-regina/seamless-leather.jpg")`,
                 backgroundSize: '280px 150px'
               }}
             />
           )}
+
+          {/* Contenedor z-10 que mantiene todo el contenido visible, iluminado y sin tapar */}
+          <div className="relative z-10">
           {/* OVERLAY DE CARGA Y DIAGNÓSTICO EN TIEMPO REAL */}
           <AnimatePresence>
             {isCalculating && (
@@ -314,8 +319,10 @@ export const CanjeCalculatorModal: React.FC<CanjeCalculatorModalProps> = ({
                       onClick={() => setBrand(b)}
                       className={`p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl text-xs sm:text-sm font-bold border transition-all flex items-center justify-center gap-2 ${
                         tradeInState.brand === b
-                          ? 'bg-white/20 border-white text-white shadow-sm'
-                          : 'bg-white/5 border-white/10 text-slate-300 hover:border-white/20'
+                          ? 'bg-white text-black border-white shadow-sm font-extrabold'
+                          : isLeather
+                            ? 'bg-zinc-900/90 border-zinc-700/80 text-zinc-200 hover:border-zinc-500'
+                            : 'bg-white/5 border-white/10 text-slate-300 hover:border-white/20'
                       }`}
                     >
                       <Smartphone size={15} />
@@ -337,8 +344,10 @@ export const CanjeCalculatorModal: React.FC<CanjeCalculatorModalProps> = ({
                       onClick={() => setModel(m.model)}
                       className={`p-2.5 sm:p-3 rounded-xl text-xs font-bold border text-left transition-all truncate ${
                         tradeInState.model === m.model
-                          ? 'bg-white text-black border-white shadow-md'
-                          : 'bg-white/5 border-white/10 text-slate-200 hover:bg-white/10'
+                          ? 'bg-white text-black border-white shadow-md font-extrabold'
+                          : isLeather
+                            ? 'bg-zinc-900/90 border-zinc-700/80 text-zinc-200 hover:border-zinc-500'
+                            : 'bg-white/5 border-white/10 text-slate-200 hover:bg-white/10'
                       }`}
                     >
                       {m.model}
@@ -359,8 +368,10 @@ export const CanjeCalculatorModal: React.FC<CanjeCalculatorModalProps> = ({
                       onClick={() => updateState('storage', cap)}
                       className={`px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-xl text-xs font-bold border transition-all ${
                         tradeInState.storage === cap
-                          ? 'bg-white text-black border-white shadow-sm'
-                          : 'bg-white/5 border-white/10 text-slate-300 hover:border-white/20'
+                          ? 'bg-white text-black border-white shadow-sm font-extrabold'
+                          : isLeather
+                            ? 'bg-zinc-900/90 border-zinc-700/80 text-zinc-200 hover:border-zinc-500'
+                            : 'bg-white/5 border-white/10 text-slate-300 hover:border-white/20'
                       }`}
                     >
                       {cap}
@@ -373,7 +384,11 @@ export const CanjeCalculatorModal: React.FC<CanjeCalculatorModalProps> = ({
                 <button
                   type="button"
                   onClick={() => setStep(2)}
-                  className="w-full sm:w-auto btn-liquid-cyan flex items-center justify-center gap-2 py-3 px-6 rounded-2xl text-xs font-bold text-black"
+                  className={`w-full sm:w-auto flex items-center justify-center gap-2 py-3 px-6 rounded-2xl text-xs font-bold transition-all ${
+                    isLeather
+                      ? 'bg-white hover:bg-zinc-200 text-black shadow-md font-extrabold'
+                      : 'btn-liquid-cyan text-black'
+                  }`}
                 >
                   <span>Continuar al Diagnóstico</span>
                   <ArrowRight size={15} />
@@ -559,7 +574,11 @@ export const CanjeCalculatorModal: React.FC<CanjeCalculatorModalProps> = ({
                 <button
                   type="button"
                   onClick={handleStartCalculation}
-                  className="btn-liquid-cyan flex items-center gap-1.5 py-2.5 px-5 rounded-2xl text-xs font-bold text-black"
+                  className={`flex items-center gap-1.5 py-2.5 px-5 rounded-2xl text-xs font-bold transition-all ${
+                    isLeather
+                      ? 'bg-white hover:bg-zinc-200 text-black shadow-md font-extrabold'
+                      : 'btn-liquid-cyan text-black'
+                  }`}
                 >
                   <span>{isManualMode ? 'Ver Resumen' : 'Calcular Cotización'}</span>
                   <Sparkles size={15} />
@@ -821,6 +840,7 @@ export const CanjeCalculatorModal: React.FC<CanjeCalculatorModalProps> = ({
               </div>
             </motion.div>
           )}
+          </div>
         </motion.div>
       </div>
     </AnimatePresence>
