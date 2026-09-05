@@ -162,7 +162,7 @@ export function App() {
       <main className="max-w-7xl mx-auto w-full px-2 sm:px-6 flex-1">
         {/* ─── HERO BANNER ─── */}
         {config.customSettings?.aesthetic === 'leather-luxury' ? (
-          <section className="px-4 pt-6 pb-2 text-center max-w-3xl mx-auto">
+          <section className="px-4 pt-6 sm:pt-9 pb-2 text-center max-w-3xl mx-auto">
             <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/10 border border-white/15 text-zinc-300 text-[11px] font-bold tracking-wide uppercase mb-3">
               <Sparkles size={12} className="text-white" />
               <span>{config.heroTagline || 'Villa Regina, Río Negro'}</span>

@@ -52,20 +52,20 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   return (
     <>
-      <header className={`sticky top-0 z-40 w-full px-3 sm:px-8 py-2.5 sm:py-3.5 backdrop-blur-2xl transition-all ${
-        isLeather 
-          ? 'bg-[#0B0B0E]/90 border-b border-zinc-800/80'
-          : 'bg-[#000000]/85 border-b border-white/10'
-      }`}>
-        <div className="max-w-7xl mx-auto flex items-center justify-between gap-2 sm:gap-3">
+      <header className="sticky top-2 sm:top-4 z-40 w-full px-2 sm:px-6 pointer-events-none transition-all">
+        <div className={`max-w-6xl mx-auto pointer-events-auto rounded-2xl sm:rounded-full px-3 sm:px-5 py-2 sm:py-2.5 backdrop-blur-2xl transition-all duration-300 flex items-center justify-between gap-2 sm:gap-4 ${
+          isLeather 
+            ? 'bg-[#0E0E12]/92 border border-white/15 shadow-[0_12px_40px_rgba(0,0,0,0.85)] ring-1 ring-white/5'
+            : 'bg-[#000000]/85 border border-white/20 shadow-[0_12px_35px_rgba(0,0,0,0.8)]'
+        }`}>
           {/* Brand Logo & Info */}
           <div 
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="flex items-center gap-2 sm:gap-3 cursor-pointer select-none group min-w-0 flex-1 sm:flex-initial"
+            className="flex items-center gap-2.5 sm:gap-3.5 cursor-pointer select-none group min-w-0 flex-1 sm:flex-initial"
             title="Ir al inicio del catálogo"
           >
             {config.logoUrl ? (
-              <div className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-full overflow-hidden bg-black/60 border border-white/25 flex items-center justify-center p-0.5 shadow-lg shrink-0">
+              <div className="relative w-10 h-10 sm:w-11 sm:h-11 rounded-full overflow-hidden bg-black border border-white/30 flex items-center justify-center p-0.5 shadow-[0_4px_12px_rgba(0,0,0,0.6)] shrink-0 group-hover:border-white/50 transition-all">
                 <img
                   src={config.logoUrl}
                   alt={config.storeName}
@@ -76,16 +76,16 @@ export const Navbar: React.FC<NavbarProps> = ({
                 />
               </div>
             ) : (
-              <div className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-gradient-to-tr from-white/20 via-zinc-400/20 to-transparent p-[1.5px] shadow-[0_0_20px_rgba(255,255,255,0.15)] shrink-0">
+              <div className="relative w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-gradient-to-tr from-white/25 via-zinc-400/20 to-transparent p-[1.5px] shadow-[0_0_20px_rgba(255,255,255,0.15)] shrink-0">
                 <div className="w-full h-full rounded-[14px] bg-[#08080A] flex items-center justify-center">
-                  <AppleLogo size={18} className="text-white fill-white sm:w-5 sm:h-5" />
+                  <AppleLogo size={20} className="text-white fill-white" />
                 </div>
               </div>
             )}
 
             <div className="min-w-0">
               <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
-                <span className="text-sm sm:text-lg font-black tracking-tight text-white font-display truncate max-w-[120px] xs:max-w-[160px] sm:max-w-none">
+                <span className="text-sm sm:text-base font-black tracking-tight text-white font-display truncate max-w-[120px] xs:max-w-[160px] sm:max-w-none group-hover:text-zinc-200 transition-colors">
                   {config.storeName}
                 </span>
 
@@ -94,14 +94,14 @@ export const Navbar: React.FC<NavbarProps> = ({
                   type="button"
                   onClick={handleOpenInstagram}
                   title={`Tienda Verificada · Clic para ver @${(config.instagramUser || 'teststore.oficial').replace('@', '')} en Instagram`}
-                  className={`inline-flex items-center gap-1 px-1.5 sm:px-2 py-0.5 rounded-full border transition-all active:scale-95 group/badge cursor-pointer shrink-0 ${
+                  className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full border transition-all active:scale-95 group/badge cursor-pointer shrink-0 ${
                     isLeather
-                      ? 'bg-zinc-800 text-zinc-200 border-zinc-700 hover:border-zinc-500'
+                      ? 'bg-zinc-800/90 text-zinc-200 border-zinc-700/80 hover:border-zinc-500 hover:text-white'
                       : 'bg-gradient-to-r from-sky-500/20 to-blue-500/20 hover:from-sky-500/30 hover:to-blue-500/30 border-sky-400/40 hover:border-sky-400 text-sky-300 hover:text-sky-200 shadow-[0_0_12px_rgba(56,189,248,0.25)]'
                   }`}
                 >
-                  <BadgeCheck size={12} className={isLeather ? 'text-zinc-300' : 'text-sky-400 fill-sky-400/30'} />
-                  <span className="text-[9px] sm:text-[10px] font-black tracking-tight">
+                  <BadgeCheck size={12} className={isLeather ? 'text-sky-400' : 'text-sky-400 fill-sky-400/30'} />
+                  <span className="text-[9px] sm:text-[10px] font-bold tracking-tight">
                     Verificada
                   </span>
                 </button>
@@ -114,10 +114,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                   e.stopPropagation();
                   setShowLocationsModal(true);
                 }}
-                className="flex items-center gap-1 text-[10px] sm:text-[11px] text-slate-300 hover:text-white transition-all -mt-0.5 group py-0.5"
+                className="flex items-center gap-1.5 text-[10px] sm:text-[11px] text-zinc-400 hover:text-white transition-all -mt-0.5 group/loc py-0.5"
               >
-                <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
-                <span className="font-semibold underline decoration-slate-600 group-hover:decoration-white truncate max-w-[130px] xs:max-w-[180px] sm:max-w-[280px]">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shrink-0" />
+                <span className="font-semibold underline decoration-zinc-700 group-hover/loc:decoration-white truncate max-w-[130px] xs:max-w-[180px] sm:max-w-[280px]">
                   {config.deliveryLocations && config.deliveryLocations.length > 0
                     ? `${config.deliveryLocations.length} Puntos de Retiro & Envíos`
                     : 'Puntos de Entrega'}
@@ -127,27 +127,27 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
 
           {/* Acciones de Cabecera */}
-          <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
+          <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
             {/* Badge Dólar Blue Venta */}
             {config.showArsPrice && (
               <button
                 type="button"
                 onClick={onRefreshDollar}
                 title={`Dólar Blue Venta en Vivo · Última actualización: ${config.lastDollarFetchTime || 'Reciente'}. Clic para refrescar.`}
-                className={`flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 sm:py-1.5 rounded-xl sm:rounded-2xl border text-[11px] sm:text-xs font-semibold transition-all cursor-pointer group shrink-0 ${
+                className={`flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3.5 py-1.5 rounded-full border text-[11px] sm:text-xs font-semibold transition-all cursor-pointer group shrink-0 ${
                   isLeather
-                    ? 'bg-zinc-900 hover:bg-zinc-800 text-zinc-200 border-zinc-800'
+                    ? 'bg-zinc-900/90 hover:bg-zinc-800 text-zinc-200 border-zinc-700/80 hover:border-emerald-500/50 shadow-inner'
                     : 'bg-emerald-500/10 hover:bg-emerald-500/20 border-emerald-500/25 text-slate-200'
                 }`}
               >
-                <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
-                <span className="text-[10px] sm:text-[11px] text-slate-400 hidden md:inline">Blue Venta:</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shrink-0" />
+                <span className="text-[10px] sm:text-[11px] text-zinc-400 hidden md:inline">Blue:</span>
                 <span className="text-emerald-400 font-extrabold text-[11px] sm:text-xs">
                   ${config.usdToArsRate.toLocaleString('es-AR')}
                 </span>
                 <RefreshCw 
                   size={10} 
-                  className={`text-slate-400 group-hover:text-emerald-300 shrink-0 ${isUpdatingDollar ? 'animate-spin text-emerald-400' : ''}`} 
+                  className={`text-zinc-500 group-hover:text-emerald-300 shrink-0 ${isUpdatingDollar ? 'animate-spin text-emerald-400' : ''}`} 
                 />
               </button>
             )}
@@ -156,13 +156,13 @@ export const Navbar: React.FC<NavbarProps> = ({
             <button
               type="button"
               onClick={onOpenCanje}
-              className={`hidden sm:flex items-center gap-1.5 py-1.5 sm:py-2 px-3 sm:px-4 rounded-xl sm:rounded-2xl text-xs font-bold transition-all active:scale-95 ${
+              className={`hidden sm:flex items-center gap-1.5 py-1.5 sm:py-2 px-3.5 sm:px-4 rounded-full text-xs font-bold transition-all active:scale-95 shrink-0 ${
                 isLeather
-                  ? 'bg-white hover:bg-zinc-200 text-black shadow-md border border-white font-extrabold'
+                  ? 'bg-white/10 hover:bg-white/20 text-white border border-white/20 hover:border-white/40 shadow-sm'
                   : 'bg-white/10 hover:bg-white/20 text-white border border-white/20 shadow-[0_0_15px_rgba(255,255,255,0.1)]'
               }`}
             >
-              <RefreshCw size={13} className={isLeather ? 'text-black' : 'animate-spin-slow text-slate-200'} />
+              <RefreshCw size={13} className="text-emerald-400 animate-spin-slow" />
               <span>Plan Canje</span>
             </button>
 
@@ -170,14 +170,14 @@ export const Navbar: React.FC<NavbarProps> = ({
             <button
               type="button"
               onClick={onOpenAdmin}
-              className={`p-2 sm:p-2.5 rounded-xl sm:rounded-2xl border active:scale-95 transition-all shrink-0 ${
+              className={`p-2 sm:p-2.5 rounded-full border active:scale-95 transition-all shrink-0 ${
                 isLeather
-                  ? 'bg-zinc-900 hover:bg-zinc-800 text-zinc-300 hover:text-white border-zinc-800'
+                  ? 'bg-zinc-900/90 hover:bg-zinc-800 text-zinc-400 hover:text-white border-zinc-700/80 hover:border-zinc-500'
                   : 'bg-white/5 hover:bg-white/15 text-slate-300 hover:text-white border border-white/10'
               }`}
               title="Panel de Administración"
             >
-              <Lock size={15} />
+              <Lock size={14} />
             </button>
           </div>
         </div>
