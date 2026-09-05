@@ -30,7 +30,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
   return (
     <div
-      className={`group relative rounded-3xl p-4 sm:p-5 flex flex-col justify-between overflow-hidden transition-all duration-200 hover:-translate-y-1 ${
+      onClick={() => onOpenDetail(product)}
+      className={`group relative rounded-3xl p-4 sm:p-5 flex flex-col justify-between overflow-hidden transition-all duration-200 hover:-translate-y-1 cursor-pointer select-none ${
         isLeather
           ? 'bg-[#121216] border border-zinc-800/90 hover:border-zinc-500/60 shadow-[0_15px_35px_rgba(0,0,0,0.9)]'
           : isUsado 
@@ -140,11 +141,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         </div>
 
         {/* Botones */}
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-2 gap-2" onClick={(e) => e.stopPropagation()}>
           {/* Botón Plan Canje */}
           <button
             type="button"
-            onClick={() => onOpenCanje(product)}
+            onClick={(e) => {
+              e.stopPropagation();
+              onOpenCanje(product);
+            }}
             className={`flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-2xl text-xs font-bold transition-all active:scale-95 ${
               isLeather
                 ? 'bg-zinc-800/80 hover:bg-zinc-700 text-zinc-200 border border-zinc-700/70'
@@ -158,7 +162,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           {/* Botón WhatsApp Oficial (Consultar) */}
           <button
             type="button"
-            onClick={() => onQuickBuy(product)}
+            onClick={(e) => {
+              e.stopPropagation();
+              onQuickBuy(product);
+            }}
             className={`flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-2xl text-xs font-black active:scale-95 transition-all ${
               isLeather
                 ? 'bg-emerald-500 hover:bg-emerald-400 text-black shadow-md'
