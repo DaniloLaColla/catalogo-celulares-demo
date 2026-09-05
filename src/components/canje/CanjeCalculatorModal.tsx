@@ -164,11 +164,15 @@ export const CanjeCalculatorModal: React.FC<CanjeCalculatorModalProps> = ({
 
         {/* Modal Window */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.94, y: 20 }}
+          initial={{ opacity: 0, scale: 0.95, y: 15 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.94, y: 20 }}
-          transition={{ type: 'spring', stiffness: 300, damping: 26 }}
-          className="relative w-full max-w-xl sm:max-w-2xl max-h-[92vh] overflow-y-auto no-scrollbar rounded-2xl sm:rounded-3xl p-4 sm:p-7 bg-[#0A0A0E] border border-white/20 z-10 my-auto text-slate-100 shadow-[0_25px_60px_rgba(0,0,0,0.95)]"
+          exit={{ opacity: 0, scale: 0.95, y: 15 }}
+          transition={{ type: 'spring', stiffness: 320, damping: 28 }}
+          className={`relative w-full max-w-xl sm:max-w-2xl max-h-[92vh] overflow-y-auto no-scrollbar rounded-2xl sm:rounded-3xl p-4 sm:p-7 z-10 my-auto text-slate-100 shadow-[0_25px_60px_rgba(0,0,0,0.95)] ${
+            config.customSettings?.aesthetic === 'leather-luxury'
+              ? 'bg-[#0E0E12] border border-zinc-800'
+              : 'bg-[#0A0A0E] border border-white/20'
+          }`}
         >
           {/* OVERLAY DE CARGA Y DIAGNÓSTICO EN TIEMPO REAL */}
           <AnimatePresence>

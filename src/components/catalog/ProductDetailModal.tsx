@@ -106,6 +106,8 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
     }
   };
 
+  const isLeather = config.customSettings?.aesthetic === 'leather-luxury';
+
   return (
     <AnimatePresence>
       <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
@@ -118,13 +120,17 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
           className="fixed inset-0 bg-black/85 backdrop-blur-xl"
         />
 
-        {/* Modal Window */}
+        {/* Modal Window Responsive */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.94, y: 20 }}
+          initial={{ opacity: 0, scale: 0.95, y: 15 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.94, y: 20 }}
-          transition={{ type: 'spring', stiffness: 300, damping: 26 }}
-          className="relative w-full max-w-2xl max-h-[92vh] overflow-y-auto no-scrollbar rounded-3xl p-5 sm:p-8 bg-[#0A0A0E] border border-white/20 z-10 my-auto text-slate-100 shadow-[0_25px_60px_rgba(0,0,0,0.95)] space-y-6"
+          exit={{ opacity: 0, scale: 0.95, y: 15 }}
+          transition={{ type: 'spring', stiffness: 320, damping: 28 }}
+          className={`relative w-full max-w-3xl lg:max-w-4xl max-h-[92vh] overflow-y-auto no-scrollbar rounded-3xl p-4 sm:p-6 lg:p-8 z-10 my-auto text-slate-100 shadow-[0_25px_70px_rgba(0,0,0,0.95)] space-y-5 sm:space-y-6 ${
+            isLeather 
+              ? 'bg-[#0E0E12] border border-zinc-800'
+              : 'bg-[#0A0A0E] border border-white/20'
+          }`}
         >
           {/* Header */}
           <div className="flex items-center justify-between pb-3 border-b border-white/10">
@@ -132,10 +138,14 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
               <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
                 {product.brand} · {product.category}
               </span>
-              <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full border ${
-                isUsado 
-                  ? 'bg-purple-500/20 text-purple-300 border-purple-500/30' 
-                  : 'bg-white/15 text-slate-100 border-white/20'
+              <span className={`text-[10px] font-extrabold px-2.5 py-0.5 rounded-full border ${
+                isLeather
+                  ? isUsado
+                    ? 'bg-zinc-800 text-purple-300 border-zinc-700'
+                    : 'bg-zinc-800 text-zinc-200 border-zinc-700'
+                  : isUsado 
+                    ? 'bg-purple-500/20 text-purple-300 border-purple-500/30' 
+                    : 'bg-white/15 text-slate-100 border-white/20'
               }`}>
                 {isUsado ? '🔄 Usado Seleccionado' : '📦 Sellado de Fábrica'}
               </span>
@@ -174,10 +184,10 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
           </div>
 
           {/* Grid Principal: Galería de Fotos + Info */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 items-start">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 items-start">
             {/* ─── GALERÍA INTERACTIVA DE FOTOS ─── */}
-            <div className="space-y-3">
-              <div className="relative w-full aspect-square rounded-3xl bg-white/[0.02] border border-white/10 flex items-center justify-center p-4 overflow-hidden group">
+            <div className="space-y-3 w-full">
+              <div className="relative w-full aspect-square max-h-[300px] sm:max-h-[360px] rounded-3xl bg-white/[0.02] border border-white/10 flex items-center justify-center p-4 overflow-hidden group mx-auto">
                 <div className="absolute inset-0 bg-gradient-to-tr from-white/5 via-transparent to-transparent pointer-events-none" />
 
                 {/* Foto Principal Actual */}
@@ -228,7 +238,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                       key={idx}
                       type="button"
                       onClick={() => setCurrentPhotoIndex(idx)}
-                      className={`relative w-12 h-12 rounded-xl overflow-hidden border transition-all shrink-0 p-0.5 ${
+                      className={`relative w-11 h-11 sm:w-12 sm:h-12 rounded-xl overflow-hidden border transition-all shrink-0 p-0.5 ${
                         currentPhotoIndex === idx
                           ? 'border-emerald-400 ring-2 ring-emerald-400/30 scale-105'
                           : 'border-white/15 opacity-60 hover:opacity-100'
@@ -242,7 +252,11 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
 
               {/* Badge de Batería si es usado */}
               {isUsado && (
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-2xl bg-purple-950/40 border border-purple-500/40 text-purple-300 text-xs font-bold shadow-lg w-full justify-center">
+                <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-2xl text-xs font-bold shadow-lg w-full justify-center ${
+                  isLeather
+                    ? 'bg-zinc-900 border border-zinc-700 text-zinc-200'
+                    : 'bg-purple-950/40 border border-purple-500/40 text-purple-300'
+                }`}>
                   <BatteryCharging size={16} className="text-emerald-400" />
                   <span>Batería: <strong className="text-white">{product.batteryPercentage || 90}%</strong> (Original)</span>
                 </div>
@@ -252,7 +266,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
             {/* Configuración del Producto */}
             <div className="space-y-4">
               <div>
-                <h2 className="text-2xl font-black text-white tracking-tight leading-tight">
+                <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight leading-tight">
                   {product.name}
                 </h2>
                 <p className="text-xs text-slate-300 mt-1 leading-relaxed">
@@ -270,10 +284,12 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                     <button
                       key={storage}
                       onClick={() => setSelectedStorage(storage)}
-                      className={`px-4 py-2 rounded-xl text-xs font-bold border transition-all ${
+                      className={`px-3.5 py-1.5 sm:py-2 rounded-xl text-xs font-bold border transition-all ${
                         selectedStorage === storage
                           ? 'bg-white text-black border-white shadow-md'
-                          : 'bg-white/5 border-white/10 text-slate-300 hover:border-white/20'
+                          : isLeather
+                            ? 'bg-zinc-900 border-zinc-800 text-zinc-300 hover:border-zinc-700'
+                            : 'bg-white/5 border-white/10 text-slate-300 hover:border-white/20'
                       }`}
                     >
                       {storage}
@@ -289,7 +305,9 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                 </label>
 
                 {isUsado ? (
-                  <div className="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-xs font-bold text-slate-200">
+                  <div className={`inline-flex items-center gap-2 px-3 py-1.5 sm:py-2 rounded-xl border text-xs font-bold text-slate-200 ${
+                    isLeather ? 'bg-zinc-900 border-zinc-800' : 'bg-white/5 border-white/10'
+                  }`}>
                     <span 
                       className="w-3.5 h-3.5 rounded-full border border-white/20"
                       style={{ backgroundColor: product.colorOptions[0]?.hex || '#7D7E80' }}
@@ -303,10 +321,12 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                       <button
                         key={col.name}
                         onClick={() => setSelectedColor(col.name)}
-                        className={`flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold border transition-all ${
+                        className={`flex items-center gap-2 px-3 py-1.5 sm:py-2 rounded-xl text-xs font-bold border transition-all ${
                           selectedColor === col.name
                             ? 'bg-white/20 border-white text-white shadow-sm'
-                            : 'bg-white/5 border-white/10 text-slate-400 hover:border-white/20'
+                            : isLeather
+                              ? 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:border-zinc-700'
+                              : 'bg-white/5 border-white/10 text-slate-400 hover:border-white/20'
                         }`}
                       >
                         <span
@@ -321,7 +341,9 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
               </div>
 
               {/* Términos de Garantía */}
-              <div className="p-3 rounded-2xl bg-white/[0.03] border border-white/10 flex items-start gap-2.5">
+              <div className={`p-3 rounded-2xl border flex items-start gap-2.5 ${
+                isLeather ? 'bg-zinc-900/50 border-zinc-800' : 'bg-white/[0.03] border-white/10'
+              }`}>
                 <ShieldCheck size={16} className={`shrink-0 mt-0.5 ${isUsado ? 'text-purple-400' : 'text-slate-200'}`} />
                 <div className="text-xs">
                   <span className="font-bold text-white block">
@@ -339,7 +361,9 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
 
           {/* Puntos de Retiro & Envíos */}
           {config.deliveryLocations && config.deliveryLocations.length > 0 && (
-            <div className="p-3.5 rounded-2xl bg-white/[0.02] border border-white/10 space-y-2">
+            <div className={`p-3.5 rounded-2xl border space-y-2 ${
+              isLeather ? 'bg-zinc-900/40 border-zinc-800' : 'bg-white/[0.02] border-white/10'
+            }`}>
               <div className="flex items-center gap-2 text-xs font-bold text-emerald-400 uppercase tracking-wider">
                 <MapPin size={15} />
                 <span>Puntos de Retiro Inmediato</span>
@@ -348,7 +372,9 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                 {config.deliveryLocations.map((loc, idx) => (
                   <span
                     key={idx}
-                    className="px-2.5 py-1 rounded-xl bg-white/5 border border-white/10 text-[11px] text-slate-300 font-medium"
+                    className={`px-2.5 py-1 rounded-xl border text-[11px] font-medium ${
+                      isLeather ? 'bg-zinc-800/80 border-zinc-700 text-zinc-300' : 'bg-white/5 border-white/10 text-slate-300'
+                    }`}
                   >
                     📍 {loc}
                   </span>
@@ -357,15 +383,15 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
             </div>
           )}
 
-          {/* Footer de Precios & Botones de Acción */}
-          <div className="pt-4 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div>
+          {/* Footer de Precios & Botones de Acción Totalmente Adaptativo */}
+          <div className="pt-4 border-t border-white/10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="min-w-0">
               <span className="text-xs text-slate-400 block font-semibold">Precio Final:</span>
               <div className="flex items-baseline gap-2">
-                <span className="text-3xl font-black text-white font-display">
+                <span className="text-2xl sm:text-3xl font-black text-white font-display">
                   ${product.priceUSD.toLocaleString('en-US')}
                 </span>
-                <span className="text-sm font-bold text-slate-400">USD</span>
+                <span className="text-xs sm:text-sm font-bold text-slate-400">USD</span>
               </div>
 
               {config.showArsPrice && (
@@ -380,7 +406,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
               )}
             </div>
 
-            <div className="flex items-center gap-3 w-full sm:w-auto">
+            <div className="flex items-center gap-2.5 sm:gap-3 w-full md:w-auto shrink-0">
               {/* Botón Plan Canje */}
               <button
                 type="button"
@@ -388,9 +414,13 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                   onClose();
                   onOpenCanje(product);
                 }}
-                className="flex-1 sm:flex-none flex items-center justify-center gap-2 py-3.5 px-4 rounded-2xl bg-white/10 hover:bg-white/20 text-slate-200 border border-white/20 text-xs font-bold active:scale-95 transition-all"
+                className={`flex-1 md:flex-initial flex items-center justify-center gap-1.5 sm:gap-2 py-3 px-3.5 sm:px-4 rounded-2xl text-xs font-bold active:scale-95 transition-all shrink-0 ${
+                  isLeather
+                    ? 'bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-zinc-700'
+                    : 'bg-white/10 hover:bg-white/20 text-slate-200 border border-white/20'
+                }`}
               >
-                <ArrowRightLeft size={16} />
+                <ArrowRightLeft size={15} className="shrink-0" />
                 <span>Plan Canje</span>
               </button>
 
@@ -398,10 +428,14 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
               <button
                 type="button"
                 onClick={() => onBuyWhatsApp(product, selectedStorage, selectedColor)}
-                className="flex-1 sm:flex-none btn-liquid-whatsapp flex items-center justify-center gap-2 py-3.5 px-6 rounded-2xl text-xs font-black text-black active:scale-95 transition-all shadow-[0_0_20px_rgba(37,211,102,0.4)]"
+                className={`flex-1 md:flex-initial flex items-center justify-center gap-1.5 sm:gap-2 py-3 px-4 sm:px-5 rounded-2xl text-xs font-black active:scale-95 transition-all shrink-0 ${
+                  isLeather
+                    ? 'bg-emerald-500 hover:bg-emerald-400 text-black shadow-md'
+                    : 'btn-liquid-whatsapp text-black shadow-[0_0_20px_rgba(37,211,102,0.4)]'
+                }`}
               >
-                <WhatsAppIcon size={18} className="text-black fill-black" />
-                <span>Consultar por WhatsApp</span>
+                <WhatsAppIcon size={16} className="text-black fill-black shrink-0" />
+                <span className="whitespace-nowrap">Consultar por WhatsApp</span>
               </button>
             </div>
           </div>
