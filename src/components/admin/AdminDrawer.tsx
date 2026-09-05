@@ -3043,7 +3043,7 @@ export const AdminDrawer: React.FC<AdminDrawerProps> = ({
                         <p className="text-lg font-black text-emerald-400">
                           {leadMetrics.sent}
                         </p>
-                        <p className="text-[10px] text-emerald-300/70 font-medium">Leads que te escribieron</p>
+                        <p className="text-[10px] text-emerald-300/70 font-medium">Clientes que te escribieron</p>
                       </div>
 
                       {/* 3. Modelo Más Ofrecido en Toma (Opción 4) */}
