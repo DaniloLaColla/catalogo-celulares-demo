@@ -17,6 +17,7 @@ import { Product, CategoryType } from './types';
 import { LiquidBackground } from './components/layout/LiquidBackground';
 import { Navbar } from './components/layout/Navbar';
 import { BottomNav } from './components/layout/BottomNav';
+import { FloatingWhatsAppButton } from './components/layout/FloatingWhatsAppButton';
 import { CategoryChips } from './components/catalog/CategoryChips';
 import { SearchFilterBar } from './components/catalog/SearchFilterBar';
 import { ProductCard } from './components/catalog/ProductCard';
@@ -423,6 +424,8 @@ export function App() {
         onSelectTab={handleSelectMobileTab}
         config={config}
       />
+
+      <FloatingWhatsAppButton config={config} />
 
       <footer className="w-full py-6 px-4 text-center border-t border-white/5 text-slate-500 text-xs mt-8">
         <p className="font-semibold text-slate-400">
