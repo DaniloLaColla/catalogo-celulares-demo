@@ -198,52 +198,52 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
           {/* Grid Principal: Galería de Fotos + Info */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 items-start">
             {/* ─── GALERÍA INTERACTIVA DE FOTOS ─── */}
-            <div className="space-y-3 w-full">
-              <div className={`relative w-full aspect-square max-h-[300px] sm:max-h-[360px] rounded-3xl flex items-center justify-center p-4 overflow-hidden group mx-auto border transition-all ${
-                isLeather
-                  ? 'bg-black/95 border-white/15 shadow-[inset_0_4px_25px_rgba(0,0,0,0.95),0_10px_25px_rgba(0,0,0,0.7)]'
-                  : 'bg-black/85 border-white/15 shadow-inner'
-              }`}>
-                <div className="absolute inset-0 bg-gradient-to-b from-white/[0.02] via-transparent to-black/40 pointer-events-none" />
+            <div className="space-y-3 w-full flex flex-col items-center">
+              <div className="flex items-center justify-center w-full min-h-[200px] sm:min-h-[260px]">
+                <div className={`relative inline-flex items-center justify-center max-w-full rounded-2xl overflow-hidden border transition-all ${
+                  isLeather
+                    ? 'border-zinc-800/80 bg-black/90 p-1 shadow-[0_12px_35px_rgba(0,0,0,0.85)]'
+                    : 'border-white/15 bg-black/80 p-1 shadow-xl'
+                }`}>
+                  {/* Foto Principal Actual */}
+                  <motion.img
+                    key={currentPhotoIndex}
+                    initial={{ opacity: 0, scale: 0.98 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.2 }}
+                    src={photos[currentPhotoIndex] || product.image}
+                    alt={`${product.name} - Foto ${currentPhotoIndex + 1}`}
+                    className="max-h-[260px] sm:max-h-[330px] w-auto max-w-full object-contain rounded-xl block filter drop-shadow-[0_10px_20px_rgba(0,0,0,0.7)]"
+                  />
 
-                {/* Foto Principal Actual */}
-                <motion.img
-                  key={currentPhotoIndex}
-                  initial={{ opacity: 0, scale: 0.96 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.2 }}
-                  src={photos[currentPhotoIndex] || product.image}
-                  alt={`${product.name} - Foto ${currentPhotoIndex + 1}`}
-                  className="max-h-full max-w-full object-contain filter drop-shadow-[0_20px_25px_rgba(0,0,0,0.8)]"
-                />
+                  {/* Flechas de Navegación si hay más de 1 foto */}
+                  {photos.length > 1 && (
+                    <>
+                      <button
+                        type="button"
+                        onClick={handlePrevPhoto}
+                        className="absolute left-2 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/75 hover:bg-black text-white border border-white/20 transition-all opacity-85 hover:opacity-100 active:scale-90 shadow-lg"
+                        title="Foto anterior"
+                      >
+                        <ChevronLeft size={16} />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleNextPhoto}
+                        className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/75 hover:bg-black text-white border border-white/20 transition-all opacity-85 hover:opacity-100 active:scale-90 shadow-lg"
+                        title="Siguiente foto"
+                      >
+                        <ChevronRight size={16} />
+                      </button>
 
-                {/* Flechas de Navegación si hay más de 1 foto */}
-                {photos.length > 1 && (
-                  <>
-                    <button
-                      type="button"
-                      onClick={handlePrevPhoto}
-                      className="absolute left-2 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/60 hover:bg-black/90 text-white border border-white/20 transition-all opacity-80 hover:opacity-100 active:scale-90"
-                      title="Foto anterior"
-                    >
-                      <ChevronLeft size={16} />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleNextPhoto}
-                      className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/60 hover:bg-black/90 text-white border border-white/20 transition-all opacity-80 hover:opacity-100 active:scale-90"
-                      title="Siguiente foto"
-                    >
-                      <ChevronRight size={16} />
-                    </button>
-
-                    {/* Contador de fotos */}
-                    <div className="absolute bottom-2.5 right-2.5 px-2 py-0.5 rounded-full bg-black/70 border border-white/20 text-[10px] font-bold text-white flex items-center gap-1">
-                      <Camera size={11} />
-                      <span>{currentPhotoIndex + 1} / {photos.length}</span>
-                    </div>
-                  </>
-                )}
+                      {/* Contador de fotos */}
+                      <div className="absolute bottom-2 right-2 px-2 py-0.5 rounded-full bg-black/80 border border-white/20 text-[10px] font-bold text-white flex items-center gap-1 shadow-md">
+                        <Camera size={11} />
+                        <span>{currentPhotoIndex + 1} / {photos.length}</span>
+                      </div>
+                    </>
+                  )}
+                </div>
               </div>
 
               {/* Tira de Miniaturas Táctiles */}
