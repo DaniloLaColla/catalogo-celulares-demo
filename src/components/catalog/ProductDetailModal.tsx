@@ -199,8 +199,12 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 items-start">
             {/* ─── GALERÍA INTERACTIVA DE FOTOS ─── */}
             <div className="space-y-3 w-full">
-              <div className="relative w-full aspect-square max-h-[300px] sm:max-h-[360px] rounded-3xl bg-white/[0.02] border border-white/10 flex items-center justify-center p-4 overflow-hidden group mx-auto">
-                <div className="absolute inset-0 bg-gradient-to-tr from-white/5 via-transparent to-transparent pointer-events-none" />
+              <div className={`relative w-full aspect-square max-h-[300px] sm:max-h-[360px] rounded-3xl flex items-center justify-center p-4 overflow-hidden group mx-auto border transition-all ${
+                isLeather
+                  ? 'bg-black/95 border-white/15 shadow-[inset_0_4px_25px_rgba(0,0,0,0.95),0_10px_25px_rgba(0,0,0,0.7)]'
+                  : 'bg-black/85 border-white/15 shadow-inner'
+              }`}>
+                <div className="absolute inset-0 bg-gradient-to-b from-white/[0.02] via-transparent to-black/40 pointer-events-none" />
 
                 {/* Foto Principal Actual */}
                 <motion.img
@@ -250,7 +254,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                       key={idx}
                       type="button"
                       onClick={() => setCurrentPhotoIndex(idx)}
-                      className={`relative w-11 h-11 sm:w-12 sm:h-12 rounded-xl overflow-hidden border transition-all shrink-0 p-0.5 ${
+                      className={`relative w-11 h-11 sm:w-12 sm:h-12 rounded-xl overflow-hidden border transition-all shrink-0 p-1 bg-black/90 ${
                         currentPhotoIndex === idx
                           ? 'border-emerald-400 ring-2 ring-emerald-400/30 scale-105'
                           : 'border-white/15 opacity-60 hover:opacity-100'
