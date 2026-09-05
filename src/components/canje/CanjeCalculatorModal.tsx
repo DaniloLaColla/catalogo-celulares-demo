@@ -170,10 +170,20 @@ export const CanjeCalculatorModal: React.FC<CanjeCalculatorModalProps> = ({
           transition={{ type: 'spring', stiffness: 320, damping: 28 }}
           className={`relative w-full max-w-xl sm:max-w-2xl max-h-[92vh] overflow-y-auto no-scrollbar rounded-2xl sm:rounded-3xl p-4 sm:p-7 z-10 my-auto text-slate-100 shadow-[0_25px_60px_rgba(0,0,0,0.95)] ${
             config.customSettings?.aesthetic === 'leather-luxury'
-              ? 'bg-[#0E0E12] border border-zinc-800'
+              ? 'bg-[#101014] border border-zinc-700/80'
               : 'bg-[#0A0A0E] border border-white/20'
           }`}
         >
+          {/* Textura de cuero genuino palpable dentro del modal de canje */}
+          {config.customSettings?.aesthetic === 'leather-luxury' && (
+            <div 
+              className="absolute inset-0 rounded-2xl sm:rounded-3xl bg-repeat opacity-60 pointer-events-none z-0"
+              style={{ 
+                backgroundImage: `url("/tenants/istore-regina/seamless-leather.jpg")`,
+                backgroundSize: '280px 150px'
+              }}
+            />
+          )}
           {/* OVERLAY DE CARGA Y DIAGNÓSTICO EN TIEMPO REAL */}
           <AnimatePresence>
             {isCalculating && (

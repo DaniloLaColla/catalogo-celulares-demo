@@ -126,30 +126,42 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 15 }}
           transition={{ type: 'spring', stiffness: 320, damping: 28 }}
-          className={`relative w-full max-w-3xl lg:max-w-4xl max-h-[92vh] overflow-y-auto no-scrollbar rounded-3xl p-4 sm:p-6 lg:p-8 z-10 my-auto text-slate-100 shadow-[0_25px_70px_rgba(0,0,0,0.95)] space-y-5 sm:space-y-6 ${
+          className={`relative w-full max-w-3xl lg:max-w-4xl max-h-[92vh] overflow-y-auto no-scrollbar rounded-3xl p-4 sm:p-6 lg:p-8 z-10 my-auto text-slate-100 shadow-[0_25px_70px_rgba(0,0,0,0.95)] ${
             isLeather 
-              ? 'bg-[#0E0E12] border border-zinc-800'
+              ? 'bg-[#101014] border border-zinc-700/80'
               : 'bg-[#0A0A0E] border border-white/20'
           }`}
         >
-          {/* Header */}
-          <div className="flex items-center justify-between pb-3 border-b border-white/10">
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
-                {product.brand} · {product.category}
-              </span>
-              <span className={`text-[10px] font-extrabold px-2.5 py-0.5 rounded-full border ${
-                isLeather
-                  ? isUsado
-                    ? 'bg-zinc-800 text-purple-300 border-zinc-700'
-                    : 'bg-zinc-800 text-zinc-200 border-zinc-700'
-                  : isUsado 
-                    ? 'bg-purple-500/20 text-purple-300 border-purple-500/30' 
-                    : 'bg-white/15 text-slate-100 border-white/20'
-              }`}>
-                {isUsado ? '🔄 Usado Seleccionado' : '📦 Sellado de Fábrica'}
-              </span>
-            </div>
+          {/* Textura de cuero genuino dentro del modal */}
+          {isLeather && (
+            <div 
+              className="absolute inset-0 rounded-3xl bg-repeat opacity-65 pointer-events-none z-0"
+              style={{ 
+                backgroundImage: `url("/tenants/istore-regina/seamless-leather.jpg")`,
+                backgroundSize: '280px 150px'
+              }}
+            />
+          )}
+
+          <div className="relative z-10 space-y-5 sm:space-y-6">
+            {/* Header */}
+            <div className="flex items-center justify-between pb-3 border-b border-white/10">
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+                  {product.brand} · {product.category}
+                </span>
+                <span className={`text-[10px] font-extrabold px-2.5 py-0.5 rounded-full border ${
+                  isLeather
+                    ? isUsado
+                      ? 'bg-zinc-800/90 text-purple-300 border-zinc-700'
+                      : 'bg-zinc-800/90 text-zinc-200 border-zinc-700'
+                    : isUsado 
+                      ? 'bg-purple-500/20 text-purple-300 border-purple-500/30' 
+                      : 'bg-white/15 text-slate-100 border-white/20'
+                }`}>
+                  {isUsado ? '🔄 Usado Seleccionado' : '📦 Sellado de Fábrica'}
+                </span>
+              </div>
 
             <div className="flex items-center gap-2">
               {/* Botón Compartir */}
@@ -438,6 +450,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                 <span className="whitespace-nowrap">Consultar por WhatsApp</span>
               </button>
             </div>
+          </div>
           </div>
         </motion.div>
       </div>

@@ -10,16 +10,16 @@ export const LiquidBackground: React.FC<LiquidBackgroundProps> = ({ bgTexture, a
     <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10 bg-[#0C0C0E] will-change-transform">
       {isLeather ? (
         <>
-          {/* Textura de cuero negro genuino homogénea y continua (Cero cortes ni franjas) */}
+          {/* Textura de cuero negro genuino con grano palpable y bien definido */}
           <div 
-            className="absolute inset-0 bg-repeat opacity-40"
+            className="absolute inset-0 bg-repeat opacity-75"
             style={{ 
               backgroundImage: `url("/tenants/istore-regina/seamless-leather.jpg")`,
-              backgroundSize: '300px 160px'
+              backgroundSize: '320px 170px'
             }}
           />
-          {/* Sombreado homogéneo para contraste y legibilidad óptima */}
-          <div className="absolute inset-0 bg-black/40" />
+          {/* Sombreado suave que realza el relieve del cuero sin taparlo */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-black/10 to-black/45" />
         </>
       ) : (
         <>
